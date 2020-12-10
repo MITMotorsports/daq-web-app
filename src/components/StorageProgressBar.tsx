@@ -26,7 +26,7 @@ const StorageProgressBar: React.FC<StorageProgressBarProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [uploadInfo.snapshot]);
 
   return (
     <Box>
