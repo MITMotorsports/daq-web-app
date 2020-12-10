@@ -1,0 +1,7 @@
+{
+  "name": "daq-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
