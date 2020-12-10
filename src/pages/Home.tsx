@@ -56,7 +56,7 @@ const Home: React.FC = () => {
 
   const fuse = new Fuse(logFiles, searchOptions);
 
-  const [filters, setFilterMap] = useState<Map<string, FileFilter>>(
+  const [filters] = useState<Map<string, FileFilter>>(
     new Map<string, FileFilter>()
   );
   const setFilters = async (name: string, f: FileFilter) => {
@@ -80,7 +80,7 @@ const Home: React.FC = () => {
 
   window.addEventListener("load", reloadFiles);
 
-  const classes = makeStyles((theme) => ({
+  makeStyles((theme) => ({
     root: {
       flexGrow: 1,
     },

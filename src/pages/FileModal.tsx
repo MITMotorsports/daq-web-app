@@ -30,7 +30,7 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       <TextField
         label="url"
         defaultValue="No Download Url Available."
-        value={downloadUrl}
+        value={downloadUrl ? urlToMatlabCode(downloadUrl) : undefined}
         InputProps={{ readOnly: true }}
       />
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
