@@ -21,7 +21,11 @@ const FileListItem: React.FC<FileListItemProps> = ({ file, onClick }) => {
         secondary={file.uploadDate.toLocaleString()}
       />
 
-      <Button disabled={downloadUrl === undefined} variant="contained">
+      <Button
+        href={downloadUrl}
+        disabled={downloadUrl === undefined}
+        variant="contained"
+      >
         Download
       </Button>
     </ListItem>
