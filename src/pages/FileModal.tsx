@@ -26,7 +26,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 // https://github.com/plotly/react-plotly.js/issues/135#issuecomment-501398125
-import Plotly from "plotly.js";
+import Plotly from "plotly.js-basic-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
 const Plot = createPlotlyComponent(Plotly);
 
