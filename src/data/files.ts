@@ -48,7 +48,7 @@ export const getPreviewData = async (file: LogFile) => {
 
   if ("fields_data" in json_obj) {
     preview_obj.fields_data = new Map();
-    for (var field in json_obj["fields_data"]) {
+    for (let field in json_obj["fields_data"]) {
       preview_obj.fields_data.set(field, [
         json_obj["fields_data"][field]["x"],
         json_obj["fields_data"][field]["y"],
@@ -57,7 +57,7 @@ export const getPreviewData = async (file: LogFile) => {
   }
   if ("info" in json_obj) {
     preview_obj.info = [];
-    for (var key in json_obj["info"]) {
+    for (let key in json_obj["info"]) {
       preview_obj.info.push([key, json_obj["info"][key]]);
     }
   }
