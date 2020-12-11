@@ -49,7 +49,7 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
         <List subheader={<ListSubheader>Fields</ListSubheader>}>
           {data.fields_data && data.fields_data.size > 0 ? (
             Array.from(data.fields_data.keys()).map((x) => (
-              <ListItem>{x}</ListItem>
+              <ListItem><Typography>{x}</Typography></ListItem>
             ))
           ) : (
             <Alert severity="warning">No fields available</Alert>
@@ -59,8 +59,8 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
           {data.info?.map(([k, v]) => (
             <ListItem>
               <Grid container spacing={3}>
-                <Grid item>{k}</Grid>
-                <Grid item>{v}</Grid>
+                <Grid item><Typography>{k}</Typography></Grid>
+                <Grid item><Typography>{v}</Typography></Grid>
               </Grid>
             </ListItem>
           ))}
@@ -131,7 +131,7 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
         Copy Url
       </Button>
-      {copySuccess}
+      <Typography>{ copySuccess }</Typography >
       <FilePreview file={file}></FilePreview>
     </div>
   );

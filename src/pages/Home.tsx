@@ -80,15 +80,9 @@ const Home: React.FC = () => {
 
   window.addEventListener("load", reloadFiles);
 
-  makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-  }))();
-
   return (
     <Container
-      style={{ height: "100%", overflow: "scroll" }}
+      style={{ height: "100%", overflow: "hidden" }}
       maxWidth={false}
       disableGutters={true}
     >
