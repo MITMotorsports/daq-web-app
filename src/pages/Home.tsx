@@ -68,10 +68,10 @@ const Home: React.FC = () => {
     const fls = await getFiles();
     setLogFiles(fls);
 
-    var newOpenedState = new Array(fls.length).fill(true);
+    const newOpenedState = new Array(fls.length).fill(false);
     // Preserve state of previous groups
     if (opened) {
-      for (var i = 0; i < Math.min(opened.length, newOpenedState.length); i++) {
+      for (let i = 0; i < Math.min(opened.length, newOpenedState.length); i++) {
         newOpenedState[i] = opened[i];
       }
     }
