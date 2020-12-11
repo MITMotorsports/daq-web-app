@@ -260,6 +260,8 @@ const Home: React.FC = () => {
       <Dialog
         open={selectedFile !== null}
         onClose={() => setSelectedFile(null)}
+        fullWidth={true}
+        maxWidth={false}
       >
         <DialogTitle>
           {selectedFile && selectedFile.name}

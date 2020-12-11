@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import L from "leaflet";
 
 export interface LogFile {
   id: string;
@@ -26,3 +27,40 @@ export const getDownloadUrlForFile = async (
   type: "raw" | "parsed"
 ): Promise<string> =>
   firebase.storage().ref(`prototype/${fileId}/${type}`).getDownloadURL();
+
+export interface FilePreviewData {
+  gps_coords: L.LatLng[] | null;
+  fields_data: Map<string, [number[], number[]]> | null;
+  info: [string, string][] | null;
+}
+
+export const getPreviewData = async (file: LogFile) => {
+  const json_data =
+    '{"gps_coords": [[52.505,-0.09], [51.51,-0.1], [51.51, -0.12]], "info": {"max_speed": "1", "max_power": "2"}, "fields_data": {"field1": {"x": [1,2,3], "y": [3,2,1]}}}';
+  const json_obj = JSON.parse(json_data);
+  const preview_obj: FilePreviewData = {} as FilePreviewData;
+  if ("gps_coords" in json_obj) {
+    preview_obj["gps_coords"] = (json_obj["gps_coords"] as [
+      number,
+      number
+    ][]).map((pos) => new L.LatLng(pos[0], pos[1]));
+  }
+
+  if ("fields_data" in json_obj) {
+    preview_obj.fields_data = new Map();
+    for (var field in json_obj["fields_data"]) {
+      preview_obj.fields_data.set(field, [
+        json_obj["fields_data"][field]["x"],
+        json_obj["fields_data"][field]["y"],
+      ]);
+    }
+  }
+  if ("info" in json_obj) {
+    preview_obj.info = [];
+    for (var key in json_obj["info"]) {
+      preview_obj.info.push([key, json_obj["info"][key]]);
+    }
+  }
+
+  return preview_obj;
+};
