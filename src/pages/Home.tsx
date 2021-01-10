@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 
+import AliasList from "../components/AliasList";
 import SearchBar from "material-ui-search-bar";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -110,7 +111,7 @@ const Home: React.FC = () => {
           <Tab label="Logs" value="logs" tabIndex={0}></Tab>
           <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
         </Tabs>
-
+        <AliasList />
         <List>
           <ListItem>
             <TextField
