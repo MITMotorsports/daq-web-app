@@ -124,8 +124,9 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
                                 type: "scatter",
                               },
                             ]}
-                            layout={{ title: field }}
-                            style={{ width: "100%", display: "block" }}
+                            layout={{ title: field, autosize: true }}
+                            style={{ width: "100%", height: "100%" }}
+                            config={{ responsive: true }}
                           />
                         </Grid>
                       ) : null

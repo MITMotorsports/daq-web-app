@@ -36,7 +36,7 @@ export interface FilePreviewData {
 
 export const getPreviewData = async (file: LogFile) => {
   const json_data =
-    '{"gps_coords": [[52.505,-0.09], [51.51,-0.1], [51.51, -0.12]], "info": {"max_speed": "1", "max_power": "2"}, "fields_data": {"field1": {"x": [1,2,3], "y": [3,2,1]}, "field2": {"x":[1,2,3], "y": [1,2,3]}}}';
+    '{"gps_coords": [[52.505,-0.09], [51.51,-0.1], [51.51, -0.12]], "info": {"max_speed": "1", "max_power": "2"}, "fields_data": {"field1": {"x": [1,2,3], "y": [3,2,1]}, "field2": {"x":[1,2,3], "y": [1,2,3]}, "field3": {"x":[1,2,3], "y": [1,2,3]}, "field4": {"x":[1,2,3], "y": [1,2,3]}}}';
   const json_obj = JSON.parse(json_data);
   const preview_obj: FilePreviewData = {} as FilePreviewData;
   if ("gps_coords" in json_obj) {
