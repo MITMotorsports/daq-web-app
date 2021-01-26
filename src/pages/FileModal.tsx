@@ -14,14 +14,16 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
     return <Typography>No File Selected</Typography>;
   }
 
-  getDownloadUrlForFile(file.id, "parsed")
+  getDownloadUrlForFile(file.id, "full.csv")
     .then((resp) => setDownloadUrl(resp))
     .catch(() =>
       console.warn(`Could not fetch download link for file ${file.id}`)
     );
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(downloadUrl as string);
+    navigator.clipboard.writeText(
+      downloadUrl ? urlToMatlabCode(downloadUrl) : ""
+    );
     setCopySuccess("Copied!");
   };
 
@@ -34,7 +36,7 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
         InputProps={{ readOnly: true }}
       />
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
-        Copy Url
+        Copy MATLAB Snippet
       </Button>
       {copySuccess}
     </div>
@@ -42,4 +44,5 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
 };
 export default FileModal;
 
-const urlToMatlabCode = (url: string) => `data = webread("${url}");`;
+const urlToMatlabCode = (url: string) =>
+  `if ~exist('d', 'var');disp('Loading data...');d = webread("${url}", weboptions('ContentType','table'));disp('Loaded');end`;

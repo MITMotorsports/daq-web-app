@@ -28,7 +28,7 @@ const FileListItem: React.FC<FileListItemProps> = ({ file, onClick }) => {
       />
 
       <ButtonGroup>
-        <Button disabled={matlabUrl === undefined} variant="contained">
+        <Button onClick={() => onClick()} variant="contained">
           MAT
         </Button>
         <Button disabled={downloadUrl === undefined} variant="contained">
