@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogFile, getDownloadUrlForFile } from "../data/files";
-import { Button, ListItem, ListItemText } from "@material-ui/core";
+import { Button, ButtonGroup, ListItem, ListItemText } from "@material-ui/core";
 
 interface FileListItemProps {
   file: LogFile;
@@ -21,13 +21,14 @@ const FileListItem: React.FC<FileListItemProps> = ({ file, onClick }) => {
         secondary={file.uploadDate.toLocaleString()}
       />
 
-      <Button
-        href={downloadUrl}
-        disabled={downloadUrl === undefined}
-        variant="contained"
-      >
-        Download
-      </Button>
+      <ButtonGroup>
+        <Button onClick={() => onClick()} variant="contained">
+          MAT
+        </Button>
+        <Button disabled={downloadUrl === undefined} variant="contained">
+          NPZ
+        </Button>
+      </ButtonGroup>
     </ListItem>
   );
 };

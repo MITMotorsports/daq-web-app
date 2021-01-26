@@ -8,6 +8,7 @@ import {
   ListItemText,
   Collapse,
   Button,
+  makeStyles,
   Grid,
   Tabs,
   Tab,
@@ -22,7 +23,6 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 
-import AliasList from "../components/AliasList";
 import SearchBar from "material-ui-search-bar";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -80,9 +80,15 @@ const Home: React.FC = () => {
 
   window.addEventListener("load", reloadFiles);
 
+  makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+  }))();
+
   return (
     <Container
-      style={{ height: "100%", overflow: "hidden" }}
+      style={{ height: "100%", overflow: "scroll" }}
       maxWidth={false}
       disableGutters={true}
     >
@@ -111,7 +117,7 @@ const Home: React.FC = () => {
           <Tab label="Logs" value="logs" tabIndex={0}></Tab>
           <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
         </Tabs>
-        <AliasList />
+
         <List>
           <ListItem>
             <TextField
@@ -150,7 +156,7 @@ const Home: React.FC = () => {
 
           <ListItem>
             <FormControl>
-              <InputLabel>MY</InputLabel>
+              <InputLabel>Chassis</InputLabel>
               <Select
                 multiple
                 value={myYears}
@@ -244,6 +250,7 @@ const Home: React.FC = () => {
           setShowUploadModal(false);
           reloadFiles();
         }}
+        maxWidth="lg"
       >
         <DialogTitle>Upload</DialogTitle>
         <DialogContent>
@@ -254,8 +261,8 @@ const Home: React.FC = () => {
       <Dialog
         open={selectedFile !== null}
         onClose={() => setSelectedFile(null)}
-        fullWidth={true}
-        maxWidth={false}
+        maxWidth="lg"
+        fullWidth
       >
         <DialogTitle>
           {selectedFile && selectedFile.name}

@@ -1,0 +1,471 @@
+{
+  "CANCurrentSensorPower": {
+    "message": "critical__CurrentSensor_Power",
+    "field": "result",
+    "scaling_factor": 1,
+    "unit": "W",
+    "alias": "P_elec"
+  },
+  "CANCurrentSensorPowerWithoutBus": {
+    "message": "CurrentSensor_Power",
+    "field": "result",
+    "scaling_factor": 1,
+    "unit": "W",
+    "alias": "P_elec"
+  },
+  "CANCurrentSensorVoltage": {
+    "message": "critical__CurrentSensor_Voltage1",
+    "field": "result",
+    "scaling_factor": 1000,
+    "unit": "V",
+    "alias": "V_dc"
+  },
+  "CANCurrentSensorVoltageWithoutBus": {
+    "message": "CurrentSensor_Voltage1",
+    "field": "result",
+    "scaling_factor": 1000,
+    "unit": "V",
+    "alias": "V_dc"
+  },
+  "CANCurrentSensorCurrent": {
+    "message": "critical__CurrentSensor_Current",
+    "field": "result",
+    "scaling_factor": 1000,
+    "unit": "A",
+    "alias": "I_dc"
+  },
+  "CANCurrentSensorCurrentWithoutBus": {
+    "message": "CurrentSensor_Current",
+    "field": "result",
+    "scaling_factor": 1000,
+    "unit": "A",
+    "alias": "I_dc"
+  },
+  "RMSTorqueCommand": {
+    "message": "control__RMSCmd",
+    "field": "torque",
+    "scaling_factor": 10,
+    "unit": "Nm",
+    "alias": "trq_cmd"
+  },
+  "MCTorqueCommand": {
+    "message": "MCCommand",
+    "field": "torque",
+    "scaling_factor": 10,
+    "unit": "Nm",
+    "alias": "trq_cmd"
+  },
+  "RMSTorqueFeedback": {
+    "message": "control__RMSTorqueTimerInfo",
+    "field": "torque_feedback",
+    "scaling_factor": 10,
+    "unit": "Nm",
+    "alias": "trq_fb"
+  },
+  "MCTorqueFeedback": {
+    "message": "MCTorqueTimerInfo",
+    "field": "torque_feedback",
+    "scaling_factor": -10,
+    "unit": "Nm",
+    "alias": "trq_fb"
+  },
+  "RMSTorqueCommandInternal": {
+    "message": "control__RMSTorqueTimerInfo",
+    "field": "commanded_torque",
+    "scaling_factor": 10,
+    "unit": "Nm",
+    "alias": "trq_cmd_internal"
+  },
+  "MCTorqueCommandInternal": {
+    "message": "MCTorqueTimerInfo",
+    "field": "commanded_torque",
+    "scaling_factor": -10,
+    "unit": "Nm",
+    "alias": "trq_cmd_internal"
+  },
+  "RMSMotorPosition": {
+    "message": "control__RMSMotorPositionInfo",
+    "field": "motor_speed",
+    "scaling_factor": 1,
+    "unit": "RPM",
+    "alias": "w_mot"
+  },
+  "MCMotorPosition": {
+    "message": "MCMotorPositionInfo",
+    "field": "motor_speed",
+    "scaling_factor": -1,
+    "unit": "RPM",
+    "alias": "w_mot"
+  },
+  "RMSFluxCurrentDAxisFeedback": {
+    "message": "control__RMSFluxInfo",
+    "field": "Id_feedback",
+    "scaling_factor": 10,
+    "unit": "A",
+    "alias": "Id_fb"
+  },
+  "RMSFluxCurrentQAxisFeedback": {
+    "message": "control__RMSFluxInfo",
+    "field": "Iq_feedback",
+    "scaling_factor": 10,
+    "unit": "A",
+    "alias": "Iq_fb"
+  },
+  "RMSWeakeningCurrentDAxisCommand": {
+    "message": "control__RMSModulationIndxFluxWeakeningInfo",
+    "field": "Id_command",
+    "scaling_factor": 10,
+    "unit": "A",
+    "alias": "Id_cmd"
+  },
+  "RMSWeakeningCurrentQAxisCommand": {
+    "message": "control__RMSModulationIndxFluxWeakeningInfo",
+    "field": "Iq_command",
+    "scaling_factor": 10,
+    "unit": "A",
+    "alias": "Iq_cmd"
+  },
+  "RMSWeakeningFluxWeakeningOutput": {
+    "message": "control__RMSModulationIndxFluxWeakeningInfo",
+    "field": "flux_weakening_output",
+    "scaling_factor": 10,
+    "unit": "A",
+    "alias": "FW_output"
+  },
+  "RMSWeakeningModulationIndex": {
+    "message": "control__RMSModulationIndxFluxWeakeningInfo",
+    "field": "modulation_index",
+    "scaling_factor": 1,
+    "unit": "N/A",
+    "alias": "mod_idx"
+  },
+  "RMSVoltageDAxis": {
+    "message": "control__RMSVoltage",
+    "field": "VAB_Vd",
+    "scaling_factor": 10,
+    "unit": "V",
+    "alias": "Vd"
+  },
+  "RMSVoltageQAxis": {
+    "message": "control__RMSVoltage",
+    "field": "VBC_Vq",
+    "scaling_factor": 10,
+    "unit": "V",
+    "alias": "Vq"
+  },
+  "RMSModuleATemperature": {
+    "message": "control__RMSTemperature",
+    "field": "module_a_temp",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_A"
+  },
+  "RMSModuleBTemperature": {
+    "message": "control__RMSTemperature",
+    "field": "module_b_temp",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_B"
+  },
+  "RMSModuleCTemperature": {
+    "message": "control__RMSTemperature",
+    "field": "module_c_temp",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_C"
+  },
+  "RMSGateDriverTemperature": {
+    "message": "control__RMSTemperature",
+    "field": "gate_driver_temp",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_G"
+  },
+  "FrontLeftWheelSpeed": {
+    "message": "FrontCanNodeLeftWheelSpeed",
+    "field": "left_32b",
+    "scaling_factor": 1000,
+    "unit": "RPM",
+    "alias": "w_wheel_fl"
+  },
+  "FrontRightWheelSpeed": {
+    "message": "FrontCanNodeRightWheelSpeed",
+    "field": "right_32b",
+    "scaling_factor": 1000,
+    "unit": "RPM",
+    "alias": "w_wheel_fr"
+  },
+  "AccelerationPedals1": {
+    "message": "sensor__AccelPedals",
+    "field": "accel_1",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "accel_1"
+  },
+  "AccelerationPedals2": {
+    "message": "sensor__AccelPedals",
+    "field": "accel_2",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "accel_2"
+  },
+  "FrontBrakeThrottleAcceleration1": {
+    "message": "FrontCanNodeBrakeThrottle",
+    "field": "accel_1",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "accel_1"
+  },
+  "FrontBrakeThrottleAcceleration2": {
+    "message": "FrontCanNodeBrakeThrottle",
+    "field": "accel_2",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "accel_2"
+  },
+  "FrontBrakeThrottleBrake1": {
+    "message": "FrontCanNodeBrakeThrottle",
+    "field": "brake_1",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "brake_1"
+  },
+  "FrontBrakeThrottleBrake2": {
+    "message": "FrontCanNodeBrakeThrottle",
+    "field": "brake_2",
+    "scaling_factor": 1,
+    "unit": "transformed acceleration reading",
+    "alias": "brake_2"
+  },
+  "FrontCanNodeSteering": {
+    "message": "FrontCanNodeSteering",
+    "field": "value",
+    "scaling_factor": 1,
+    "unit": "raw adc",
+    "alias": "steering_angle"
+  },
+  "ZPositionAltitude": {
+    "message": "sensor__SBG_EKF_Altitude",
+    "field": "altitude",
+    "scaling_factor": 1000,
+    "unit": "m",
+    "alias": "imu_alt"
+  },
+  "ZPositionUndulation": {
+    "message": "sensor__SBG_EKF_Altitude",
+    "field": "undulation",
+    "scaling_factor": 5000,
+    "unit": "m",
+    "alias": "imu_und"
+  },
+  "XYPositionLatitude": {
+    "message": "sensor__SBG_EKF_Position",
+    "field": "latitude",
+    "scaling_factor": "10^7*360/(2*pi)* 6371 * 1000",
+    "unit": "m",
+    "alias": "imu_lat"
+  },
+  "XYPositionLongitude": {
+    "message": "sensor__SBG_EKF_Position",
+    "field": "longitude",
+    "scaling_factor": "10^7*360/(2*pi)* 6371 * 1000",
+    "unit": "m",
+    "alias": "imu_lon"
+  },
+  "CompensatedAccelerationX": {
+    "message": "sensor__SBG_IMU_DeltaVelocity",
+    "field": "x",
+    "scaling_factor": 100,
+    "unit": "m / (s ** 2)",
+    "alias": "imu_ax"
+  },
+  "CompensatedAccelerationY": {
+    "message": "sensor__SBG_IMU_DeltaVelocity",
+    "field": "y",
+    "scaling_factor": 100,
+    "unit": "m / (s ** 2)",
+    "alias": "imu_ay"
+  },
+  "CompensatedAccelerationZ": {
+    "message": "sensor__SBG_IMU_DeltaVelocity",
+    "field": "z",
+    "scaling_factor": 100,
+    "unit": "m / (s ** 2)",
+    "alias": "imu_az"
+  },
+  "CompensatedAngularVelocityX": {
+    "message": "sensor__SBG_IMU_DeltaAngle",
+    "field": "x",
+    "scaling_factor": 1000,
+    "unit": "rad / s",
+    "alias": "imu_wx"
+  },
+  "CompensatedAngularVelocityY": {
+    "message": "sensor__SBG_IMU_DeltaAngle",
+    "field": "y",
+    "scaling_factor": 1000,
+    "unit": "rad / s",
+    "alias": "imu_wy"
+  },
+  "CompensatedAngularVelocityZ": {
+    "message": "sensor__SBG_IMU_DeltaAngle",
+    "field": "z",
+    "scaling_factor": 1000,
+    "unit": "rad / s",
+    "alias": "imu_wz"
+  },
+  "VelocityNorth": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "north",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_north"
+  },
+  "VelocityEast": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "east",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_east"
+  },
+  "VelocityDown": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "down",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_down"
+  },
+  "VelocityACCNorth": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "north",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_north_acc"
+  },
+  "VelocityACCEast": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "east",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_east_acc"
+  },
+  "VelocityACCDown": {
+    "message": "sensor__SBG_EKF_Velocity",
+    "field": "down",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "imu_v_down_acc"
+  },
+  "OrientationRoll": {
+    "message": "sensor__SBG_EKF_Euler",
+    "field": "roll",
+    "scaling_factor": 10000,
+    "unit": "rad",
+    "alias": "imu_roll"
+  },
+  "OrientationPitch": {
+    "message": "sensor__SBG_EKF_Euler",
+    "field": "pitch",
+    "scaling_factor": 10000,
+    "unit": "rad",
+    "alias": "imu_pitch"
+  },
+  "OrientationYaw": {
+    "message": "sensor__SBG_EKF_Euler",
+    "field": "yaw",
+    "scaling_factor": 10000,
+    "unit": "rad",
+    "alias": "imu_yaw"
+  },
+  "DriverManualLimpFactor": {
+    "message": "DashRequest",
+    "field": "limp_factor",
+    "scaling_factor": 1,
+    "unit": "percent",
+    "alias": "limp_limit_gain"
+  },
+  "KistlerGroundSpeed": {
+    "message": "KistlerSpeedDistance",
+    "field": "ground_speed",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "ground_speed"
+  },
+  "KistlerDistance": {
+    "message": "KistlerSpeedDistance",
+    "field": "distance",
+    "scaling_factor": 100,
+    "unit": "m",
+    "alias": "distance"
+  },
+  "KistlerVelocityLateral": {
+    "message": "KistlerVelocity",
+    "field": "lateral",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "kist_v_lat"
+  },
+  "KistlerVelocityLongitudinal": {
+    "message": "KistlerVelocity",
+    "field": "longitudinal",
+    "scaling_factor": 100,
+    "unit": "m / s",
+    "alias": "kist_v_lon"
+  },
+  "KistlerVelocityAngle": {
+    "message": "KistlerVelocity",
+    "field": "angle",
+    "scaling_factor": 100,
+    "unit": "deg",
+    "alias": "v_angle"
+  },
+  "VCUControlsVoltageLimitingGain": {
+    "message": "VCUControlsMonitoring",
+    "field": "vl_gain",
+    "scaling_factor": 1,
+    "unit": "percent",
+    "alias": "V_limit_gain"
+  },
+  "VCUControlsTemperatureLimitingGain": {
+    "message": "VCUControlsMonitoring",
+    "field": "tl_gain",
+    "scaling_factor": 1,
+    "unit": "percent",
+    "alias": "temp_limit_gain"
+  },
+  "CellTemperatureRangeMax": {
+    "message": "critical__CellTemperatureRange",
+    "field": "max",
+    "scaling_factor": 100,
+    "unit": "degC",
+    "alias": "temp_max"
+  },
+  "CellTemperatureRangeMaxWithoutBus": {
+    "message": "CellTemperatureRange",
+    "field": "max0",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_max"
+  },
+  "CellTemperatureRangeMin": {
+    "message": "critical__CellTemperatureRange",
+    "field": "min",
+    "scaling_factor": 100,
+    "unit": "degC",
+    "alias": "temp_min"
+  },
+  "CellTemperatureRangeMinWithoutBus": {
+    "message": "CellTemperatureRange",
+    "field": "min",
+    "scaling_factor": 10,
+    "unit": "degC",
+    "alias": "temp_min"
+  },
+  "CellTemperatureRangeAvg": {
+    "message": "critical__CellTemperatureRange",
+    "field": "avg",
+    "scaling_factor": 100,
+    "unit": "degC",
+    "alias": "temp_avg"
+  }
+}
