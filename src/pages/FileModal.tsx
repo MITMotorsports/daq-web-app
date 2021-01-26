@@ -10,6 +10,7 @@ import {
   MenuItem,
   Checkbox,
   ListItemText,
+  CircularProgress,
 } from "@material-ui/core";
 
 interface FileModalProps {
@@ -20,32 +21,40 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
+  const [loadingFileLink, setLoadingFileLink] = React.useState(false);
 
   // const classes = useStyles();
 
   async function handleRequestFile() {
     console.log("run request");
+    setLoadingFileLink(true);
     const columns = file!.columns.filter((col) =>
       columnNames.includes(col.alias)
     );
-    console.log(columnNames);
+    console.log(columns);
 
-    const resp = await axios.post(
-      "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
-      {
-        file_id: file!.id,
-        columns: columns,
-      },
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+    try {
+      const resp = await axios.post(
+        "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
+        {
+          file_id: file!.id,
+          columns: columns,
         },
-      }
-    );
-    console.log(resp);
-    getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(resp);
+      getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingFileLink(false);
+    }
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -72,13 +81,20 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
         multiple
       >
         {file.columns.map((v) => (
-          <MenuItem key={v.name} value={v.alias}>
+          <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
             <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-            <ListItemText primary={v.alias} />
+            <ListItemText
+              primary={`${v.message}.${v.field} as ${v.alias}`}
+              secondary={v.unit}
+            />
           </MenuItem>
         ))}
       </Select>
-      <Button onClick={handleRequestFile}>Request File</Button>
+      {loadingFileLink ? (
+        <CircularProgress />
+      ) : (
+        <Button onClick={handleRequestFile}> Request File</Button>
+      )}
       <TextField
         label="url"
         value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}

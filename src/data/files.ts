@@ -1,7 +1,23 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-export type ColumnInfo = { name: string; alias: string; unit: string };
+const dataTypes: {
+  [key: string]: {
+    message: string;
+    field: string;
+    scaling_factor: number;
+    unit: string;
+    alias: string;
+  };
+} = require("../data_types.json");
+
+export type ColumnInfo = {
+  message: string;
+  field: string;
+  alias: string;
+  unit: string;
+  scale_factor: number;
+};
 export interface LogFile {
   id: string;
   name: string;
@@ -13,10 +29,25 @@ export const getFiles = async () => {
   const querySnapshot = await firebase.firestore().collection("files").get();
   const files = [] as LogFile[];
   querySnapshot.docs.forEach((docSnapshot) => {
+    const messageNames: string[] = docSnapshot.data().columns ?? [];
+    const columns: ColumnInfo[] = [];
+    for (const messageName of messageNames) {
+      for (const [, value] of Object.entries(dataTypes)) {
+        if (value.message === messageName) {
+          columns.push({
+            message: value.message,
+            field: value.field,
+            alias: value.alias,
+            unit: value.unit,
+            scale_factor: value.scaling_factor,
+          });
+        }
+      }
+    }
     files.push({
       id: docSnapshot.id,
       name: docSnapshot.data().name,
-      columns: docSnapshot.data().columns ?? [],
+      columns: columns,
       uploadDate: (docSnapshot.data()!
         .uploaded as firebase.firestore.Timestamp).toDate(),
     });
