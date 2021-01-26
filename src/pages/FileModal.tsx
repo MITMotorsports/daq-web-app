@@ -93,7 +93,9 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       {loadingFileLink ? (
         <CircularProgress />
       ) : (
-        <Button onClick={handleRequestFile}> Request File</Button>
+        <Button onClick={handleRequestFile} disabled={columnNames.length === 0}>
+          {"Request File"}
+        </Button>
       )}
       <TextField
         label="url"
