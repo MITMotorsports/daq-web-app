@@ -1,7 +1,16 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-import { LogFile, getDownloadUrlForFile } from "../data/files";
-import { TextField, Button, Typography } from "@material-ui/core";
+import { getDownloadUrlForPath, LogFile } from "../data/files";
+import {
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+} from "@material-ui/core";
 
 interface FileModalProps {
   file: LogFile | null;
@@ -10,15 +19,42 @@ interface FileModalProps {
 const FileModal: React.FC<FileModalProps> = ({ file }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState("");
+  const [columnNames, setColumnNames] = React.useState<string[]>([]);
+
+  // const classes = useStyles();
+
+  async function handleRequestFile() {
+    console.log("run request");
+    const columns = file!.columns.filter((col) =>
+      columnNames.includes(col.alias)
+    );
+    console.log(columnNames);
+
+    const resp = await axios.post(
+      "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
+      {
+        file_id: file!.id,
+        columns: columns,
+      },
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+    console.log(resp);
+    getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
+  }
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setColumnNames(event.target.value as string[]);
+  };
+
   if (file === null) {
     return <Typography>No File Selected</Typography>;
   }
-
-  getDownloadUrlForFile(file.id, "full.csv")
-    .then((resp) => setDownloadUrl(resp))
-    .catch(() =>
-      console.warn(`Could not fetch download link for file ${file.id}`)
-    );
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
@@ -29,10 +65,23 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
 
   return (
     <div>
+      <Select
+        value={columnNames}
+        onChange={handleChange}
+        renderValue={(selected) => (selected as string[]).join(", ")}
+        multiple
+      >
+        {file.columns.map((v) => (
+          <MenuItem key={v.name} value={v.alias}>
+            <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
+            <ListItemText primary={v.alias} />
+          </MenuItem>
+        ))}
+      </Select>
+      <Button onClick={handleRequestFile}>Request File</Button>
       <TextField
         label="url"
-        defaultValue="No Download Url Available."
-        value={downloadUrl ? urlToMatlabCode(downloadUrl) : undefined}
+        value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
         InputProps={{ readOnly: true }}
       />
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
