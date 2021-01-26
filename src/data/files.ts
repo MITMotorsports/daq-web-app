@@ -23,6 +23,6 @@ export const getFiles = async () => {
 
 export const getDownloadUrlForFile = async (
   fileId: string,
-  type: "raw" | "parsed"
+  name: string
 ): Promise<string> =>
-  firebase.storage().ref(`prototype/${fileId}/${type}`).getDownloadURL();
+  firebase.storage().ref(`prototype/${fileId}/${name}`).getDownloadURL();
