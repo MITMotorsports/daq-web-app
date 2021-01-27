@@ -206,41 +206,51 @@ const Home: React.FC = () => {
             // Create components for each file that matches all filters then sort the groups by date
             const groupItems = Array.from(groups, ([k, v]) => [
               Date.parse(k),
-              v.map((f: LogFile) =>
-                !filters ||
-                Array.from(filters.values()).every((filter) => filter(f)) ? (
-                  <FileListItem
-                    key={f.id}
-                    file={f}
-                    onClick={() => setSelectedFile(f)}
-                  />
-                ) : null
-              ),
+              v
+                .map((f: LogFile) =>
+                  !filters ||
+                  Array.from(filters.values()).every((filter) => filter(f)) ? (
+                    <FileListItem
+                      key={f.id}
+                      file={f}
+                      onClick={() => setSelectedFile(f)}
+                    />
+                  ) : null
+                )
+                .filter((el: React.FC) => el !== null),
             ])
               .sort((a, b) => (a[0] > b[0] ? -1 : 1))
               .map(([k, v]) => [new Date(k).toDateString(), v]);
 
-            return groupItems.map((item, i) => (
-              <Container>
-                <ListItem
-                  button
-                  onClick={() => {
-                    setOpened(opened.map((e, idx) => (i === idx ? !e : e)));
-                  }}
-                >
-                  <ListItemText
-                    primary={item[0]}
-                    secondary={item[1].length.toString() + " files"}
-                  />
-                  {opened[i] ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={opened[i]}>
+            return groupItems.map((item, i) =>
+              item[1].length > 0 ? (
+                !searchText ? (
+                  <Container>
+                    <ListItem
+                      button
+                      onClick={() => {
+                        setOpened(opened.map((e, idx) => (i === idx ? !e : e)));
+                      }}
+                    >
+                      <ListItemText
+                        primary={item[0]}
+                        secondary={item[1].length.toString() + " files"}
+                      />
+                      {opened[i] ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={opened[i]}>
+                      <Container>
+                        <List>{item[1]}</List>
+                      </Container>
+                    </Collapse>
+                  </Container>
+                ) : (
                   <Container>
                     <List>{item[1]}</List>
                   </Container>
-                </Collapse>
-              </Container>
-            ));
+                )
+              ) : null
+            );
           })()}
         </List>
       </Container>
