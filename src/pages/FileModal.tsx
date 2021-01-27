@@ -87,11 +87,11 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
           <Grid item xs>
             <List
               subheader={<ListSubheader>Fields</ListSubheader>}
-              style={{ display: "flex", flexDirection: "row" }}
+              style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
             >
               {data.fields_data && data.fields_data.size > 0 ? (
                 Array.from(data.fields_data.keys()).map((x) => (
-                  <ListItem style={{ padding: 0 }}>
+                  <ListItem style={{ padding: 0, width: "auto" }}>
                     <Checkbox
                       checked={!!fieldChecked?.find((k) => k === x)}
                       onChange={(e) => {
@@ -128,7 +128,7 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
                                 type: "scatter",
                               },
                             ]}
-                            layout={{ title: field, autosize: true }}
+                          layout={{ title: field, autosize: true }}
                             style={{ width: "100%", height: "100%" }}
                             config={{ responsive: true }}
                           />
