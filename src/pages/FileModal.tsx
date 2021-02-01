@@ -85,7 +85,7 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
             <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
             <ListItemText
               primary={
-                `${v.message}.${v.field}` + v.alias ? `as ${v.alias}` : ""
+                `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
               }
               secondary={v.unit}
             />
