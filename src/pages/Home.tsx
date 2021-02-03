@@ -260,7 +260,8 @@ const Home: React.FC = () => {
           setShowUploadModal(false);
           reloadFiles();
         }}
-        maxWidth="lg"
+        maxWidth={false}
+        style={{overflow:'hidden'}}
       >
         <DialogTitle>Upload</DialogTitle>
         <DialogContent>
@@ -273,6 +274,7 @@ const Home: React.FC = () => {
         onClose={() => setSelectedFile(null)}
         maxWidth="lg"
         fullWidth
+        style={{overflow:'hidden'}}
       >
         <DialogTitle>
           {selectedFile && selectedFile.name}

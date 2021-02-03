@@ -1,0 +1,18 @@
+div.MuiAutocomplete-endAdornment{
+    top: 2px;
+    right: 0;
+    position: absolute;
+}
+
+.MuiInputBase-root{
+    box-sizing: unset !important;
+}
+
+.MuiInput-root{
+max-height: 80px;
+border-bottom: 0px;
+}
+
+.MuiInput-underline:after{
+    border-bottom: 0px !important;
+}

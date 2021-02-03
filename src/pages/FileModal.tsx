@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./styles.css"
 import {
   LogFile,
   getDownloadUrlForPath,
@@ -18,9 +19,16 @@ import {
   ListItemText,
   CircularProgress,
   Select,
-  MenuItem
+  MenuItem,
+  MenuList,
+  Box,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+
 
 import { MapContainer, TileLayer, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -34,6 +42,9 @@ const Plot = createPlotlyComponent(Plotly);
 interface FileModalProps {
   file: LogFile | null;
 }
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const FilePreview: React.FC<FileModalProps> = ({ file }) => {
   const [data, setData] = useState<FilePreviewData | null>(null);
@@ -150,8 +161,10 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
+  const [selectionNames, setSelectionNames] = React.useState<string[]>([]);
 
-  // const classes = useStyles();
+
+
 
   async function handleRequestFile() {
     console.log("run request");
@@ -186,6 +199,8 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    console.log(event.target.value)
+
     setColumnNames(event.target.value as string[]);
   };
 
@@ -200,14 +215,27 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
     setCopySuccess("Copied!");
   };
 
+  
+  const frequencyOptions = ['10','50','100','100'];
+
+  const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
+  `${v.message}.${v.field} as ${v.alias}`);
+
+  // columnArray.unshift('Select all');
+
+
   return (
-    <div>
-      <Select
+    <>
+{/*     
+    <Select
         value={columnNames}
         onChange={handleChange}
         renderValue={(selected) => (selected as string[]).join(", ")}
         multiple
+        fullWidth={true}
+        style={{width:"50%"}}
       >
+
         {file.columns.map((v) => (
           <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
             <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
@@ -217,7 +245,58 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
             />
           </MenuItem>
         ))}
-      </Select>
+      
+      </Select> */}
+
+      <Autocomplete
+        autoComplete
+        multiple
+        disableCloseOnSelect
+        options={frequencyOptions}
+        renderInput={(params) => <TextField {...params} label="Sample Frequency" margin="normal" />}
+
+      />
+    
+    <div
+    style={{display: 'flex', flexDirection:'row',}}>
+
+      <Autocomplete
+      autoComplete
+      multiple
+      disableCloseOnSelect
+      options={columnArray}
+      defaultValue={columnArray}
+      style={{width:"50vw", overflowY:'scroll', maxHeight:'115px'}}
+      renderOption={(option, { selected }) => (
+        <React.Fragment>
+          <Checkbox
+          icon={icon}
+          checkedIcon={checkedIcon}
+        
+          checked={selected}/>
+          {option}
+        </React.Fragment>
+      )}
+      renderInput={(params) => <TextField {...params} label="Request File(s)" margin="normal" />}
+      onChange={
+        (event: React.ChangeEvent<{}>, value: string[]) => {
+          setSelectionNames(value as string[]);
+      console.log(value, value.findIndex)
+      value.forEach(val=> 
+        (val==='Select all') ?
+          setColumnNames(columnArray)
+          // setSelectionNames(file.columns.map((v)=> `${v.message}.${v.field} as ${v.alias}`))
+          // console.log(columnArray, 'this is what i')
+          // setSelectionNames(columnArray)
+          :
+          
+        console.log(val, 'is the value'))
+    }}
+      />
+
+      
+
+      
       {loadingFileLink ? (
         <CircularProgress />
       ) : (
@@ -225,17 +304,21 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
           {"Request File"}
         </Button>
       )}
+      
       <TextField
         label="url"
         value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
         InputProps={{ readOnly: true }}
       />
+
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
         Copy MATLAB Snippet
       </Button>
+      </div>
       <Typography>{copySuccess}</Typography>
       <FilePreview file={file}></FilePreview>
-    </div>
+    
+    </>
   );
 };
 export default FileModal;
