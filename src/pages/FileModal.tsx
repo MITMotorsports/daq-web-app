@@ -6,6 +6,8 @@ import {
   FilePreviewData,
   getPreviewData,
 } from "../data/files";
+import GPSMap from "../components/GPSMap";
+import PreviewPlot from "../components/PreviewPlot";
 import {
   TextField,
   Button,
@@ -18,18 +20,9 @@ import {
   ListItemText,
   CircularProgress,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-
-import { MapContainer, TileLayer, Polyline } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-// https://github.com/plotly/react-plotly.js/issues/135#issuecomment-501398125
-import Plotly from "plotly.js-basic-dist";
-import createPlotlyComponent from "react-plotly.js/factory";
-const Plot = createPlotlyComponent(Plotly);
 
 interface FileModalProps {
   file: LogFile | null;
@@ -67,27 +60,17 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
               ))}
             </List>
 
-            {data.gps_coords ? (
-              <div style={{ height: "300px", width: "300px" }}>
-                <MapContainer
-                  bounds={L.latLngBounds(data.gps_coords)}
-                  scrollWheelZoom={false}
-                  style={{ position: "static", height: "100%" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Polyline positions={data.gps_coords} />
-                </MapContainer>
-              </div>
-            ) : null}
+            {data.gps_coords ? <GPSMap coords={data.gps_coords} /> : null}
           </Grid>
 
           <Grid item xs>
             <List
               subheader={<ListSubheader>Fields</ListSubheader>}
-              style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}
             >
               {data.fields_data && data.fields_data.size > 0 ? (
                 Array.from(data.fields_data.keys()).map((x) => (
@@ -96,7 +79,6 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
                       checked={!!fieldChecked?.find((k) => k === x)}
                       onChange={(e) => {
                         let newChecked = [...fieldChecked];
-                        console.log(fieldChecked);
                         if (e.target.checked) {
                           newChecked.push(x);
                         } else {
@@ -119,18 +101,9 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
                   ? Array.from(data.fields_data.keys()).map((field) =>
                       !!fieldChecked?.find((k) => k === field) ? (
                         <Grid item xs>
-                          <Plot
-                            useResizeHandler={true}
-                            data={[
-                              {
-                                x: data.fields_data!.get(field)![0],
-                                y: data.fields_data!.get(field)![1],
-                                type: "scatter",
-                              },
-                            ]}
-                          layout={{ title: field, autosize: true }}
-                            style={{ width: "100%", height: "100%" }}
-                            config={{ responsive: true }}
+                          <PreviewPlot
+                            name={field}
+                            data={data.fields_data?.get(field)}
                           />
                         </Grid>
                       ) : null
