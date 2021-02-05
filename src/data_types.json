@@ -467,5 +467,243 @@
     "scaling_factor": 100,
     "unit": "degC",
     "alias": "temp_avg"
+  },
+  "MY18SBG_EKF_Velocity_ACC_north": {
+    "message": "SBG_EKF_Velocity_ACC",
+    "field": "north",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_north_acc"
+  },
+  "MY18SBG_EKF_Velocity_ACC_east": {
+    "message": "SBG_EKF_Velocity_ACC",
+    "field": "east",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_east_acc"
+  },
+  "MY18SBG_EKF_Velocity_ACC_down": {
+    "message": "SBG_EKF_Velocity_ACC",
+    "field": "down",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_down_acc"
+  },
+  "MY18SBG_EKF_Velocity_north": {
+    "message": "SBG_EKF_Velocity",
+    "field": "north",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_north"
+  },
+  "MY18SBG_EKF_Velocity_east": {
+    "message": "SBG_EKF_Velocity",
+    "field": "east",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_east"
+  },
+  "MY18SBG_EKF_Velocity_down": {
+    "message": "SBG_EKF_Velocity",
+    "field": "down",
+    "scaling_factor": 1,
+    "unit": "cm / s",
+    "alias": "imu_v_down"
+  },
+  "MY18SBG_EKF_Position_ACC_latitude": {
+    "message": "SBG_EKF_Position_ACC",
+    "field": "latitude",
+    "scaling_factor": 1,
+    "unit": "cm",
+    "alias": "imu_lat_acc"
+  },
+  "MY18SBG_EKF_Position_ACC_longitude": {
+    "message": "SBG_EKF_Position_ACC",
+    "field": "longitude",
+    "scaling_factor": 1,
+    "unit": "cm",
+    "alias": "imu_lon_acc"
+  },
+  "MY18SBG_EKF_Position_ACC_altitude": {
+    "message": "SBG_EKF_Position_ACC",
+    "field": "altitude",
+    "scaling_factor": 1,
+    "unit": "cm",
+    "alias": "imu_alt_acc"
+  },
+  "MY18SBG_EKF_Position_latitude": {
+    "message": "SBG_EKF_Position",
+    "field": "latitude",
+    "scaling_factor": 1,
+    "unit": "1e-7 deg",
+    "alias": "imu_lat"
+  },
+  "MY18SBG_EKF_Position_longitude": {
+    "message": "SBG_EKF_Position",
+    "field": "longitude",
+    "scaling_factor": 1,
+    "unit": "1e-7 deg",
+    "alias": "imu_lon"
+  },
+  "MY18SBG_EKF_Altitude_altitude": {
+    "message": "SBG_EKF_Altitude",
+    "field": "altitude",
+    "scaling_factor": 1,
+    "unit": "mm",
+    "alias": "imu_alt"
+  },
+  "MY18SBG_EKF_Altitude_undulation": {
+    "message": "SBG_EKF_Altitude",
+    "field": "undulation",
+    "scaling_factor": 1,
+    "unit": "5 mm",
+    "alias": "imu_und"
+  },
+  "MY18SBG_EKF_Orientation_ACC_pitch": {
+    "message": "SBG_EKF_Orientation_ACC",
+    "field": "pitch",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_pitch_acc"
+  },
+  "MY18SBG_EKF_Orientation_ACC_roll": {
+    "message": "SBG_EKF_Orientation_ACC",
+    "field": "roll",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_roll_acc"
+  },
+  "MY18SBG_EKF_Orientation_ACC_yaw": {
+    "message": "SBG_EKF_Orientation_ACC",
+    "field": "yaw",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_yaw_acc"
+  },
+  "MY18SBG_EKF_Euler_roll": {
+    "message": "SBG_EKF_Euler",
+    "field": "roll",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_roll"
+  },
+  "MY18SBG_EKF_Euler_pitch": {
+    "message": "SBG_EKF_Euler",
+    "field": "pitch",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_pitch"
+  },
+  "MY18SBG_EKF_Euler_yaw": {
+    "message": "SBG_EKF_Euler",
+    "field": "yaw",
+    "scaling_factor": 1,
+    "unit": "0.1 mrad",
+    "alias": "imu_yaw"
+  },
+  "MY18SBG_EKF_Quaternion_q0": {
+    "message": "SBG_EKF_Quaternion",
+    "field": "q0",
+    "scaling_factor": 1,
+    "unit": 3.0517578125e-5,
+    "alias": "imu_q0"
+  },
+  "MY18SBG_EKF_Quaternion_q1": {
+    "message": "SBG_EKF_Quaternion",
+    "field": "q1",
+    "scaling_factor": 1,
+    "unit": 3.0517578125e-5,
+    "alias": "imu_q1"
+  },
+  "MY18SBG_EKF_Quaternion_q2": {
+    "message": "SBG_EKF_Quaternion",
+    "field": "q2",
+    "scaling_factor": 1,
+    "unit": 3.0517578125e-5,
+    "alias": "imu_q2"
+  },
+  "MY18SBG_EKF_Quaternion_q3": {
+    "message": "SBG_EKF_Quaternion",
+    "field": "q3",
+    "scaling_factor": 1,
+    "unit": 3.0517578125e-5,
+    "alias": "imu_q3"
+  },
+  "MY18SBG_IMU_DeltaAngle_x": {
+    "message": "SBG_IMU_DeltaAngle",
+    "field": "x",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_wx"
+  },
+  "MY18SBG_IMU_DeltaAngle_y": {
+    "message": "SBG_IMU_DeltaAngle",
+    "field": "y",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_wy"
+  },
+  "MY18SBG_IMU_DeltaAngle_z": {
+    "message": "SBG_IMU_DeltaAngle",
+    "field": "z",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_wz"
+  },
+  "MY18SBG_IMU_DeltaVelocity_x": {
+    "message": "SBG_IMU_DeltaVelocity",
+    "field": "x",
+    "scaling_factor": 1,
+    "unit": "cm / (s ** 2)",
+    "alias": "imu_ax"
+  },
+  "MY18SBG_IMU_DeltaVelocity_y": {
+    "message": "SBG_IMU_DeltaVelocity",
+    "field": "y",
+    "scaling_factor": 1,
+    "unit": "cm / (s ** 2)",
+    "alias": "imu_ay"
+  },
+  "MY18SBG_IMU_DeltaVelocity_z": {
+    "message": "SBG_IMU_DeltaVelocity",
+    "field": "z",
+    "scaling_factor": 1,
+    "unit": "cm / (s ** 2)",
+    "alias": "imu_az"
+  },
+  "MY18SBG_IMU_Gyroscope_x": {
+    "message": "SBG_IMU_Gyroscope",
+    "field": "x",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_gyro_x"
+  },
+  "MY18SBG_IMU_Gyroscope_y": {
+    "message": "SBG_IMU_Gyroscope",
+    "field": "y",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_gyro_y"
+  },
+  "MY18SBG_IMU_Gyroscope_z": {
+    "message": "SBG_IMU_Gyroscope",
+    "field": "z",
+    "scaling_factor": 1,
+    "unit": "mrad / s",
+    "alias": "imu_gyro_z"
+  },
+  "MY18SBG_LOG_UTC_timestamp": {
+    "message": "SBG_LOG_UTC",
+    "field": "timestamp",
+    "scaling_factor": 1,
+    "unit": "ms",
+    "alias": "imu_timestamp"
+  },
+  "MY18SBG_LOG_UTC_timeofweek": {
+    "message": "SBG_LOG_UTC",
+    "field": "timeofweek",
+    "scaling_factor": 1,
+    "unit": "ms",
+    "alias": "imu_timeofweek"
   }
 }

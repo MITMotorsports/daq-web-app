@@ -46,6 +46,9 @@ export const getFiles = async () => {
         }
       }
     }
+    columns.sort((a, b) =>
+      a.message.concat(a.field) > b.message.concat(b.field) ? 1 : -1
+    );
     files.push({
       id: docSnapshot.id,
       name: docSnapshot.data().name,
