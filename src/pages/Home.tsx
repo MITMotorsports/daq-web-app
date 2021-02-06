@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
+import fullWhite from "../images/fullWhite.png";
 
 import {
   List,
@@ -93,10 +94,11 @@ const Home: React.FC = () => {
       disableGutters={true}
     >
       <AppBar position="sticky">
-        <Toolbar>
-          <Grid justify="space-between" container spacing={1}>
-            <Grid item>
-              <Typography>MIT Motorsports DAQ App</Typography>
+        <Toolbar >
+          <Grid justify="space-between" container spacing={1} style={{display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
+            <Grid item >
+              <img src={fullWhite} style={{height: "2.5vh"}}></img>
+              {/* <Typography>MIT Motorsports DAQ App</Typography> */}
             </Grid>
             <Grid item>
               <Button
