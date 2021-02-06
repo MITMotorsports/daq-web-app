@@ -97,7 +97,7 @@ const Home: React.FC = () => {
         <Toolbar >
           <Grid justify="space-between" container spacing={1} style={{display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
             <Grid item >
-              <img src={fullWhite} style={{height: "4.7vh"}}></img>
+              <a href="/home"><img src={fullWhite} style={{height: "4.7vh"}}></img></a>
               {/* <Typography>MIT Motorsports DAQ App</Typography> */}
             </Grid>
             <Grid item>
