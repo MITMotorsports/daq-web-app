@@ -116,7 +116,7 @@ const FilePreview: React.FC<FileModalProps> = ({ file }) => {
       </div>
     );
 
-  return null;
+  return  <CircularProgress />;
 };
 const FileModal: React.FC<FileModalProps> = ({ file }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
