@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import { getDownloadUrlForPath, LogFile } from "../data/files";
+import { getDownloadUrlForPath, LogFile, FileMetadata, setFileMetadata } from "../data/files";
 import {
   TextField,
   Button,
@@ -11,20 +11,29 @@ import {
   Checkbox,
   ListItemText,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@material-ui/core";
+
+import UploadListItem from "../components/UploadListItem";
 
 interface FileModalProps {
   file: LogFile | null;
+  onExited: () => void;
 }
 
-const FileModal: React.FC<FileModalProps> = ({ file }) => {
+const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
 
+  const [metadata, setMetadata] = useState<FileMetadata | undefined>(file?.metadata);
+  useEffect(() => { file && setMetadata(file.metadata) }, [file])
   // const classes = useStyles();
 
+  if (!file) return null;
   async function handleRequestFile() {
     console.log("run request");
     setLoadingFileLink(true);
@@ -73,7 +82,19 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   };
 
   return (
-    <div>
+    <Dialog
+      open={file !== null}
+      onClose={onExited}
+      maxWidth="lg"
+      fullWidth
+    >
+      <DialogTitle>
+        {file && file.name}
+        <Typography>
+          {file && file.uploadDate.toLocaleString()}
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
       <Select
         value={columnNames}
         onChange={handleChange}
@@ -107,8 +128,12 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
         Copy MATLAB Snippet
       </Button>
-      {copySuccess}
-    </div>
+        {copySuccess}
+        {metadata ? <UploadListItem file={{ file: file, uploadInfo: null, setMetadata: (k: string, v: string) => { let tmp = JSON.parse(JSON.stringify(metadata)); (tmp as any)[k] = v; setMetadata(tmp);}, metadata: metadata }}></UploadListItem> : null}
+        <Button onClick={onExited}>Cancel</Button>
+        <Button onClick={() => { metadata && setFileMetadata(file, metadata).then(onExited); }}>Save and Close</Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 export default FileModal;

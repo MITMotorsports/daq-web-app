@@ -8,10 +8,12 @@ import "firebase/firestore";
 import "firebase/storage";
 import UploadListItem from "../components/UploadListItem";
 import { Card, CardContent, List, Button, Box } from "@material-ui/core";
-
+import { FileMetadata, LogFile } from "../data/files";
 export interface FileUploadWatcher {
-  file: File;
+  file: File | LogFile;
   uploadInfo: firebase.storage.UploadTask | null;
+  setMetadata: (key: string, value: string) => void;
+  metadata: FileMetadata;
 }
 
 const UploadModal: React.FC = () => {
@@ -20,10 +22,15 @@ const UploadModal: React.FC = () => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFilenames((filenames) => [
       ...filenames,
-      ...acceptedFiles.map((file) => ({
-        file: file,
-        uploadInfo: null,
-      })),
+      ...acceptedFiles.map((file) => {
+        let metadata: FileMetadata = {};
+        return {
+          file: file,
+          uploadInfo: null,
+          setMetadata: (k: string, v: string) => { (metadata as any)[k] = v },
+          metadata: metadata,
+        };
+      }),
     ]);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -33,7 +40,8 @@ const UploadModal: React.FC = () => {
       .filter((file) => file.uploadInfo === null)
       .forEach((fileToUpload: FileUploadWatcher) => {
         const { file } = fileToUpload;
-        if (file.size < 100000000) {
+
+        if (file instanceof File && file.size < 100000000) {
           const firestoreRef = firebase.firestore().collection("files").doc();
           const storageRef = firebase
             .storage()
@@ -47,6 +55,7 @@ const UploadModal: React.FC = () => {
             firestoreRef.set({
               name: file.name,
               uploaded: firebase.firestore.FieldValue.serverTimestamp(),
+              metadata: fileToUpload.metadata,
             })
           );
 

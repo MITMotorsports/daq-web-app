@@ -23,6 +23,14 @@ export interface LogFile {
   name: string;
   columns: ColumnInfo[];
   uploadDate: Date;
+  metadata: FileMetadata;
+}
+export interface FileMetadata {
+  chassis?: string;
+  location?: string;
+  activity?: string;
+  testNum?: string;
+  notes?: string;
 }
 
 export const getFiles = async () => {
@@ -47,12 +55,14 @@ export const getFiles = async () => {
     columns.sort((a, b) =>
       a.message.concat(a.field) > b.message.concat(b.field) ? 1 : -1
     );
+    const docData = docSnapshot.data();
     files.push({
       id: docSnapshot.id,
-      name: docSnapshot.data().name,
+      name: docData.name,
       columns: columns,
       uploadDate: (docSnapshot.data()!
         .uploaded as firebase.firestore.Timestamp).toDate(),
+      metadata: docData.metadata,
     });
   });
   return files;
@@ -66,3 +76,5 @@ export const getDownloadUrlForFile = async (
 
 export const getDownloadUrlForPath = async (path: string): Promise<string> =>
   firebase.storage().ref(path).getDownloadURL();
+
+export const setFileMetadata = (file: LogFile, metadata: FileMetadata): Promise<void> => firebase.firestore().collection("files").doc(file.id).update({metadata: metadata})
