@@ -23,6 +23,7 @@ export interface LogFile {
   name: string;
   columns: ColumnInfo[];
   uploadDate: Date;
+  deleted: boolean | undefined;
 }
 
 export const getFiles = async () => {
@@ -53,6 +54,7 @@ export const getFiles = async () => {
       columns: columns,
       uploadDate: (docSnapshot.data()!
         .uploaded as firebase.firestore.Timestamp).toDate(),
+      deleted: docSnapshot.data().deleted,
     });
   });
   return files;
@@ -66,3 +68,5 @@ export const getDownloadUrlForFile = async (
 
 export const getDownloadUrlForPath = async (path: string): Promise<string> =>
   firebase.storage().ref(path).getDownloadURL();
+
+export const deleteFile = async (fileId: string) => firebase.firestore().collection("files").doc(fileId).update({"deleted": true})

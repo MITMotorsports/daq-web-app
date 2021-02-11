@@ -57,7 +57,7 @@ const Home: React.FC = () => {
   const fuse = new Fuse(logFiles, searchOptions);
 
   const [filters] = useState<Map<string, FileFilter>>(
-    new Map<string, FileFilter>()
+    new Map<string, FileFilter>([["deleted", (l: LogFile) => !l.deleted]])
   );
   const setFilters = async (name: string, f: FileFilter) => {
     if (filters) filters.set(name, f);
@@ -213,6 +213,7 @@ const Home: React.FC = () => {
                     key={f.id}
                     file={f}
                     onClick={() => setSelectedFile(f)}
+                    reloadFiles={reloadFiles}
                   />
                 ) : null
               ),
