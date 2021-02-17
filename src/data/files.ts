@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import L from "leaflet";
+import axios from "axios";
 
 const dataTypes: {
   [key: string]: {
@@ -56,6 +58,55 @@ export const getFiles = async () => {
     });
   });
   return files;
+};
+
+export interface FilePreviewData {
+  gps_coords: L.LatLng[] | null;
+  fields_data: Map<string, [number[], number[]]> | null;
+  info: [string, string][] | null;
+}
+
+export const getPreviewData = async (file: LogFile) => {
+  const resp = await axios.post(
+    "https://us-central1-mitmotorsportsdata.cloudfunctions.net/get_preview_data",
+    {
+      file_id: file!.id,
+    },
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
+  const json_obj = resp.data;
+  console.log(json_obj);
+  const preview_obj: FilePreviewData = {} as FilePreviewData;
+  if ("gps_coords" in json_obj) {
+    preview_obj["gps_coords"] = (json_obj["gps_coords"] as [
+      number,
+      number
+    ][]).map((pos) => new L.LatLng(pos[0], pos[1]));
+  }
+
+  if ("fields_data" in json_obj) {
+    preview_obj.fields_data = new Map();
+    for (let field in json_obj["fields_data"]) {
+      preview_obj.fields_data.set(field, [
+        json_obj["fields_data"][field]["x"],
+        json_obj["fields_data"][field]["y"],
+      ]);
+    }
+  }
+  if ("info" in json_obj) {
+    preview_obj.info = [];
+    for (let key in json_obj["info"]) {
+      preview_obj.info.push([key, json_obj["info"][key]]);
+    }
+  }
+
+  return preview_obj;
 };
 
 export const getDownloadUrlForFile = async (

@@ -7,7 +7,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import UploadListItem from "../components/UploadListItem";
-import { Card, CardContent, List, Button, Box } from "@material-ui/core";
+import { Card, CardContent, List, Button, Box, Typography } from "@material-ui/core";
 
 export interface FileUploadWatcher {
   file: File;
@@ -67,9 +67,9 @@ const UploadModal: React.FC = () => {
           <Backup />
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <Typography>Drop the files here ...</Typography>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <Typography>Drag 'n' drop some files here, or click to select files</Typography>
           )}
         </CardContent>
       </Card>
