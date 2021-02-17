@@ -7,7 +7,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import UploadListItem from "../components/UploadListItem";
-import { Card, CardContent, List, Button, Box } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  List,
+  Button,
+  Box,
+  Typography,
+} from "@material-ui/core";
 import { FileMetadata, LogFile } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
@@ -27,7 +34,9 @@ const UploadModal: React.FC = () => {
         return {
           file: file,
           uploadInfo: null,
-          setMetadata: (k: string, v: string) => { (metadata as any)[k] = v },
+          setMetadata: (k: string, v: string) => {
+            (metadata as any)[k] = v;
+          },
           metadata: metadata,
         };
       }),
@@ -76,9 +85,11 @@ const UploadModal: React.FC = () => {
           <Backup />
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <Typography>Drop the files here ...</Typography>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <Typography>
+              Drag 'n' drop some files here, or click to select files
+            </Typography>
           )}
         </CardContent>
       </Card>

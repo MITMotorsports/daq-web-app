@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-import { getDownloadUrlForPath, LogFile, FileMetadata, setFileMetadata } from "../data/files";
+import {
+  LogFile,
+  getDownloadUrlForPath,
+  FileMetadata,
+  setFileMetadata,
+} from "../data/files";
+import FilePreview from "../components/FilePreview";
 import {
   TextField,
   Button,
   Typography,
-  Select,
-  MenuItem,
   Checkbox,
   ListItemText,
   CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 
 import UploadListItem from "../components/UploadListItem";
@@ -29,8 +34,12 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
 
-  const [metadata, setMetadata] = useState<FileMetadata | undefined>(file?.metadata);
-  useEffect(() => { file && setMetadata(file.metadata) }, [file])
+  const [metadata, setMetadata] = useState<FileMetadata | undefined>(
+    file?.metadata
+  );
+  useEffect(() => {
+    file && setMetadata(file.metadata);
+  }, [file]);
   // const classes = useStyles();
 
   if (!file) return null;
@@ -82,56 +91,73 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   };
 
   return (
-    <Dialog
-      open={file !== null}
-      onClose={onExited}
-      maxWidth="lg"
-      fullWidth
-    >
+    <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
       <DialogTitle>
         {file && file.name}
-        <Typography>
-          {file && file.uploadDate.toLocaleString()}
-        </Typography>
+        <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
       </DialogTitle>
       <DialogContent>
-      <Select
-        value={columnNames}
-        onChange={handleChange}
-        renderValue={(selected) => (selected as string[]).join(", ")}
-        multiple
-      >
-        {file.columns.map((v) => (
-          <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
-            <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-            <ListItemText
-              primary={
-                `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
-              }
-              secondary={v.unit}
-            />
-          </MenuItem>
-        ))}
-      </Select>
-      {loadingFileLink ? (
-        <CircularProgress />
-      ) : (
-        <Button onClick={handleRequestFile} disabled={columnNames.length === 0}>
-          {"Request File"}
+        <Select
+          value={columnNames}
+          onChange={handleChange}
+          renderValue={(selected) => (selected as string[]).join(", ")}
+          multiple
+        >
+          {file.columns.map((v) => (
+            <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
+              <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
+              <ListItemText
+                primary={
+                  `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
+                }
+                secondary={v.unit}
+              />
+            </MenuItem>
+          ))}
+        </Select>
+        {loadingFileLink ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            onClick={handleRequestFile}
+            disabled={columnNames.length === 0}
+          >
+            {"Request File"}
+          </Button>
+        )}
+        <TextField
+          label="url"
+          value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
+          InputProps={{ readOnly: true }}
+        />
+        <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
+          Copy MATLAB Snippet
         </Button>
-      )}
-      <TextField
-        label="url"
-        value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
-        InputProps={{ readOnly: true }}
-      />
-      <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
-        Copy MATLAB Snippet
-      </Button>
-        {copySuccess}
-        {metadata ? <UploadListItem file={{ file: file, uploadInfo: null, setMetadata: (k: string, v: string) => { let tmp = JSON.parse(JSON.stringify(metadata)); (tmp as any)[k] = v; setMetadata(tmp);}, metadata: metadata }}></UploadListItem> : null}
+
+        <Typography>{copySuccess}</Typography>
+        <FilePreview file={file}></FilePreview>
+        {metadata ? (
+          <UploadListItem
+            file={{
+              file: file,
+              uploadInfo: null,
+              setMetadata: (k: string, v: string) => {
+                let tmp = JSON.parse(JSON.stringify(metadata));
+                (tmp as any)[k] = v;
+                setMetadata(tmp);
+              },
+              metadata: metadata,
+            }}
+          ></UploadListItem>
+        ) : null}
         <Button onClick={onExited}>Cancel</Button>
-        <Button onClick={() => { metadata && setFileMetadata(file, metadata).then(onExited); }}>Save and Close</Button>
+        <Button
+          onClick={() => {
+            metadata && setFileMetadata(file, metadata).then(onExited);
+          }}
+        >
+          Save and Close
+        </Button>
       </DialogContent>
     </Dialog>
   );
