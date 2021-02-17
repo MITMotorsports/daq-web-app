@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { LogFile, getDownloadUrlForFile, deleteFile } from "../data/files";
-import { Button, ButtonGroup, Dialog, DialogActions, DialogTitle, ListItem, ListItemText } from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  ListItem,
+  ListItemText,
+} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface FileListItemProps {
   file: LogFile;
@@ -9,7 +17,11 @@ interface FileListItemProps {
   reloadFiles: () => void;
 }
 
-const FileListItem: React.FC<FileListItemProps> = ({ file, onClick, reloadFiles }) => {
+const FileListItem: React.FC<FileListItemProps> = ({
+  file,
+  onClick,
+  reloadFiles,
+}) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
@@ -24,19 +36,25 @@ const FileListItem: React.FC<FileListItemProps> = ({ file, onClick, reloadFiles 
         primary={file.name}
         secondary={file.uploadDate.toLocaleString()}
       />
-      <div onClick={e => e.stopPropagation()}>
-        <Button onClick={() => setDeleteOpen(true) }>
-          <DeleteIcon/>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Button onClick={() => setDeleteOpen(true)}>
+          <DeleteIcon />
         </Button>
         <Dialog open={deleteOpen}>
           <DialogTitle>
-
-            {"Remove " + file.name + " from list? This will not delete the file from the database."}
-
+            {`Remove ${file.name} from list? This will not delete the file from the database.`}
           </DialogTitle>
           <DialogActions>
-            <Button onClick={ () => setDeleteOpen(false) }>Cancel</Button>
-            <Button onClick={() => { setDeleteOpen(false); deleteFile(file.id).then(reloadFiles); } } color="secondary">Remove</Button>
+            <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                setDeleteOpen(false);
+                deleteFile(file.id).then(reloadFiles);
+              }}
+              color="secondary"
+            >
+              Remove
+            </Button>
           </DialogActions>
         </Dialog>
 
@@ -47,7 +65,7 @@ const FileListItem: React.FC<FileListItemProps> = ({ file, onClick, reloadFiles 
           <Button disabled={downloadUrl === undefined} variant="contained">
             NPZ
           </Button>
-          </ButtonGroup>
+        </ButtonGroup>
       </div>
     </ListItem>
   );
