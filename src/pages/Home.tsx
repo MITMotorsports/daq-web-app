@@ -269,23 +269,10 @@ const Home: React.FC = () => {
           <Button onClick={() => setShowUploadModal(false)}>Done</Button>
         </DialogContent>
       </Dialog>
-      <Dialog
-        open={selectedFile !== null}
-        onClose={() => setSelectedFile(null)}
-        maxWidth="lg"
-        fullWidth
-      >
-        <DialogTitle>
-          {selectedFile && selectedFile.name}
-          <Typography>
-            {selectedFile && selectedFile.uploadDate.toLocaleString()}
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <FileModal file={selectedFile} />
-          <Button onClick={() => setSelectedFile(null)}>Close</Button>
-        </DialogContent>
-      </Dialog>
+
+      <FileModal file={selectedFile} onExited={() => { setSelectedFile(null); reloadFiles(); }}/>
+
+
     </Container>
   );
 };

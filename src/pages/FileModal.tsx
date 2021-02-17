@@ -3,129 +3,46 @@ import axios from "axios";
 import {
   LogFile,
   getDownloadUrlForPath,
-  FilePreviewData,
-  getPreviewData,
+  FileMetadata,
+  setFileMetadata,
 } from "../data/files";
-import GPSMap from "../components/GPSMap";
-import PreviewPlot from "../components/PreviewPlot";
+import FilePreview from "../components/FilePreview";
 import {
   TextField,
   Button,
   Typography,
-  List,
-  ListSubheader,
-  ListItem,
-  Grid,
   Checkbox,
   ListItemText,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+
+import UploadListItem from "../components/UploadListItem";
 
 interface FileModalProps {
   file: LogFile | null;
+  onExited: () => void;
 }
 
-const FilePreview: React.FC<FileModalProps> = ({ file }) => {
-  const [data, setData] = useState<FilePreviewData | null>(null);
-  const [fieldChecked, setFieldChecked] = useState<string[]>([
-    'field1', 'field2'
-  ]);
-  useEffect(() => {
-    if (!data && file)
-      getPreviewData(file)
-        .then((obj) => setData(obj))
-        .catch((e) => console.warn(e));
-  });
-
-  if (data)
-    return (
-      <div>
-        <Grid container justify="flex-start" spacing={2}>
-          <Grid item xs={3}>
-            <List subheader={<ListSubheader>Info</ListSubheader>}>
-              {data.info?.map(([k, v]) => (
-                <ListItem style={{ padding: 0 }}>
-                  <Grid container spacing={3}>
-                    <Grid item>
-                      <Typography>{k}</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography>{v}</Typography>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              ))}
-            </List>
-
-            {data.gps_coords ? <GPSMap coords={data.gps_coords} /> : null}
-          </Grid>
-
-          <Grid item xs>
-            <List
-              subheader={<ListSubheader>Fields</ListSubheader>}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              {data.fields_data && data.fields_data.size > 0 ? (
-                Array.from(data.fields_data.keys()).map((x) => (
-                  <ListItem style={{ padding: 0, width: "auto" }}>
-                    <Checkbox
-                      checked={!!fieldChecked?.find((k) => k === x)}
-                      onChange={(e) => {
-                        let newChecked = [...fieldChecked];
-                        if (e.target.checked) {
-                          newChecked.push(x);
-                        } else {
-                          const index = fieldChecked.findIndex((k) => k === x);
-                          newChecked.splice(index, 1);
-                        }
-                        setFieldChecked(newChecked);
-                      }}
-                    ></Checkbox>
-                    <Typography>{x}</Typography>
-                  </ListItem>
-                ))
-              ) : (
-                <Alert severity="warning">No fields available</Alert>
-              )}
-            </List>
-            <div style={{ flexGrow: 1 }}>
-              <Grid container spacing={0}>
-                {data.fields_data
-                  ? Array.from(data.fields_data.keys()).map((field) =>
-                      !!fieldChecked?.find((k) => k === field) ? (
-                        <Grid item xs>
-                          <PreviewPlot
-                            name={field}
-                            data={data.fields_data?.get(field)}
-                          />
-                        </Grid>
-                      ) : null
-                    )
-                  : null}
-              </Grid>
-            </div>
-          </Grid>
-        </Grid>
-      </div>
-    );
-
-  return null;
-};
-const FileModal: React.FC<FileModalProps> = ({ file }) => {
+const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
 
+  const [metadata, setMetadata] = useState<FileMetadata | undefined>(
+    file?.metadata
+  );
+  useEffect(() => {
+    file && setMetadata(file.metadata);
+  }, [file]);
   // const classes = useStyles();
 
+  if (!file) return null;
   async function handleRequestFile() {
     console.log("run request");
     setLoadingFileLink(true);
@@ -174,43 +91,75 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   };
 
   return (
-    <div>
-      <Select
-        value={columnNames}
-        onChange={handleChange}
-        renderValue={(selected) => (selected as string[]).join(", ")}
-        multiple
-      >
-        {file.columns.map((v) => (
-          <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
-            <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-            <ListItemText
-              primary={
-                `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
-              }
-              secondary={v.unit}
-            />
-          </MenuItem>
-        ))}
-      </Select>
-      {loadingFileLink ? (
-        <CircularProgress />
-      ) : (
-        <Button onClick={handleRequestFile} disabled={columnNames.length === 0}>
-          {"Request File"}
+    <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
+      <DialogTitle>
+        {file && file.name}
+        <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Select
+          value={columnNames}
+          onChange={handleChange}
+          renderValue={(selected) => (selected as string[]).join(", ")}
+          multiple
+        >
+          {file.columns.map((v) => (
+            <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
+              <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
+              <ListItemText
+                primary={
+                  `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
+                }
+                secondary={v.unit}
+              />
+            </MenuItem>
+          ))}
+        </Select>
+        {loadingFileLink ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            onClick={handleRequestFile}
+            disabled={columnNames.length === 0}
+          >
+            {"Request File"}
+          </Button>
+        )}
+        <TextField
+          label="url"
+          value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
+          InputProps={{ readOnly: true }}
+        />
+        <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
+          Copy MATLAB Snippet
         </Button>
-      )}
-      <TextField
-        label="url"
-        value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
-        InputProps={{ readOnly: true }}
-      />
-      <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
-        Copy MATLAB Snippet
-      </Button>
-      <Typography>{copySuccess}</Typography>
-      <FilePreview file={file}></FilePreview>
-    </div>
+
+        <Typography>{copySuccess}</Typography>
+        <FilePreview file={file}></FilePreview>
+        {metadata ? (
+          <UploadListItem
+            file={{
+              file: file,
+              uploadInfo: null,
+              setMetadata: (k: string, v: string) => {
+                let tmp = JSON.parse(JSON.stringify(metadata));
+                (tmp as any)[k] = v;
+                setMetadata(tmp);
+              },
+              metadata: metadata,
+            }}
+          ></UploadListItem>
+        ) : null}
+        <Button onClick={onExited}>Cancel</Button>
+        <Button
+          onClick={() => {
+            metadata && setFileMetadata(file, metadata).then(onExited);
+          }}
+        >
+          Save and Close
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 export default FileModal;
