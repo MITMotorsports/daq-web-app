@@ -270,9 +270,13 @@ const Home: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <FileModal file={selectedFile} onExited={() => { setSelectedFile(null); reloadFiles(); }}/>
-
-
+      <FileModal
+        file={selectedFile}
+        onExited={() => {
+          setSelectedFile(null);
+          reloadFiles();
+        }}
+      />
     </Container>
   );
 };
