@@ -51,28 +51,36 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     );
     console.log(columns);
 
-    try {
-      const resp = await axios.post(
-        "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
-        {
-          file_id: file!.id,
-          columns: columns,
-        },
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+    const cacheKey = columnNames
+      .sort()
+      .reduce((prev, curr) => `${prev},${curr}`);
+
+    if (file?.cache?.has(cacheKey)) {
+      const path = getPathForCachedFile(file.id, file.cache.get(cacheKey)!);
+      getDownloadUrlForPath(path).then((url) => setDownloadUrl(url));
+    } else {
+      try {
+        const resp = await axios.post(
+          "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
+          {
+            file_id: file!.id,
+            columns: columns,
           },
-        }
-      );
-      console.log(resp);
-      getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingFileLink(false);
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        console.log(resp);
+        getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
+      } catch (error) {
+        console.error(error);
+      }
     }
+    setLoadingFileLink(false);
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -166,3 +174,6 @@ export default FileModal;
 
 const urlToMatlabCode = (url: string) =>
   `if ~exist('d', 'var');disp('Loading data...');d = webread("${url}", weboptions('ContentType','table'));disp('Loaded');end`;
+
+const getPathForCachedFile = (fileId: string, csvFileName: string) =>
+  `prototype/${fileId}/${csvFileName}`;

@@ -27,6 +27,7 @@ export interface LogFile {
   uploadDate: Date;
   deleted: boolean | undefined;
   metadata: FileMetadata;
+  cache?: Map<string, string>;
 }
 export interface FileMetadata {
   chassis?: string;
@@ -66,6 +67,7 @@ export const getFiles = async () => {
       uploadDate: (docData!.uploaded as firebase.firestore.Timestamp).toDate(),
       metadata: docData.metadata,
       deleted: docData.deleted,
+      cache: docData.cache,
     });
   });
   return files;
@@ -138,6 +140,7 @@ export const setFileMetadata = (
     .collection("files")
     .doc(file.id)
     .update({ metadata: metadata });
+
 export const deleteFile = async (fileId: string) =>
   firebase
     .firestore()
