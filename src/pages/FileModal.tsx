@@ -3,156 +3,46 @@ import axios from "axios";
 import {
   LogFile,
   getDownloadUrlForPath,
-  FilePreviewData,
-  getPreviewData,
+  FileMetadata,
+  setFileMetadata,
 } from "../data/files";
+import FilePreview from "../components/FilePreview";
 import {
   TextField,
   Button,
   Typography,
-  List,
-  ListSubheader,
-  ListItem,
-  Grid,
   Checkbox,
   ListItemText,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 
-import { MapContainer, TileLayer, Polyline } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-// https://github.com/plotly/react-plotly.js/issues/135#issuecomment-501398125
-import Plotly from "plotly.js-basic-dist";
-import createPlotlyComponent from "react-plotly.js/factory";
-const Plot = createPlotlyComponent(Plotly);
+import UploadListItem from "../components/UploadListItem";
 
 interface FileModalProps {
   file: LogFile | null;
+  onExited: () => void;
 }
 
-const FilePreview: React.FC<FileModalProps> = ({ file }) => {
-  const [data, setData] = useState<FilePreviewData | null>(null);
-  const [fieldChecked, setFieldChecked] = useState<string[]>([
-    'field1', 'field2'
-  ]);
-  useEffect(() => {
-    if (!data && file)
-      getPreviewData(file)
-        .then((obj) => setData(obj))
-        .catch((e) => console.warn(e));
-  });
-
-  if (data)
-    return (
-      <div>
-        <Grid container justify="flex-start" spacing={2}>
-          <Grid item xs={3}>
-            <List subheader={<ListSubheader>Info</ListSubheader>}>
-              {data.info?.map(([k, v]) => (
-                <ListItem style={{ padding: 0 }}>
-                  <Grid container spacing={3}>
-                    <Grid item>
-                      <Typography>{k}</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography>{v}</Typography>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              ))}
-            </List>
-
-            {data.gps_coords ? (
-              <div style={{ height: "300px", width: "300px" }}>
-                <MapContainer
-                  bounds={L.latLngBounds(data.gps_coords)}
-                  scrollWheelZoom={false}
-                  style={{ position: "static", height: "100%" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Polyline positions={data.gps_coords} />
-                </MapContainer>
-              </div>
-            ) : null}
-          </Grid>
-
-          <Grid item xs>
-            <List
-              subheader={<ListSubheader>Fields</ListSubheader>}
-              style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
-            >
-              {data.fields_data && data.fields_data.size > 0 ? (
-                Array.from(data.fields_data.keys()).map((x) => (
-                  <ListItem style={{ padding: 0, width: "auto" }}>
-                    <Checkbox
-                      checked={!!fieldChecked?.find((k) => k === x)}
-                      onChange={(e) => {
-                        let newChecked = [...fieldChecked];
-                        console.log(fieldChecked);
-                        if (e.target.checked) {
-                          newChecked.push(x);
-                        } else {
-                          const index = fieldChecked.findIndex((k) => k === x);
-                          newChecked.splice(index, 1);
-                        }
-                        setFieldChecked(newChecked);
-                      }}
-                    ></Checkbox>
-                    <Typography>{x}</Typography>
-                  </ListItem>
-                ))
-              ) : (
-                <Alert severity="warning">No fields available</Alert>
-              )}
-            </List>
-            <div style={{ flexGrow: 1 }}>
-              <Grid container spacing={0}>
-                {data.fields_data
-                  ? Array.from(data.fields_data.keys()).map((field) =>
-                      !!fieldChecked?.find((k) => k === field) ? (
-                        <Grid item xs>
-                          <Plot
-                            useResizeHandler={true}
-                            data={[
-                              {
-                                x: data.fields_data!.get(field)![0],
-                                y: data.fields_data!.get(field)![1],
-                                type: "scatter",
-                              },
-                            ]}
-                          layout={{ title: field, autosize: true }}
-                            style={{ width: "100%", height: "100%" }}
-                            config={{ responsive: true }}
-                          />
-                        </Grid>
-                      ) : null
-                    )
-                  : null}
-              </Grid>
-            </div>
-          </Grid>
-        </Grid>
-      </div>
-    );
-
-  return null;
-};
-const FileModal: React.FC<FileModalProps> = ({ file }) => {
+const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
 
+  const [metadata, setMetadata] = useState<FileMetadata | undefined>(
+    file?.metadata
+  );
+  useEffect(() => {
+    file && setMetadata(file.metadata);
+  }, [file]);
   // const classes = useStyles();
 
+  if (!file) return null;
   async function handleRequestFile() {
     console.log("run request");
     setLoadingFileLink(true);
@@ -161,28 +51,36 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
     );
     console.log(columns);
 
-    try {
-      const resp = await axios.post(
-        "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
-        {
-          file_id: file!.id,
-          columns: columns,
-        },
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+    const cacheKey = columnNames
+      .sort()
+      .reduce((prev, curr) => `${prev},${curr}`);
+
+    if (file?.cache?.has(cacheKey)) {
+      const path = getPathForCachedFile(file.id, file.cache.get(cacheKey)!);
+      getDownloadUrlForPath(path).then((url) => setDownloadUrl(url));
+    } else {
+      try {
+        const resp = await axios.post(
+          "https://us-central1-mitmotorsportsdata.cloudfunctions.net/handle_csv_request",
+          {
+            file_id: file!.id,
+            columns: columns,
           },
-        }
-      );
-      console.log(resp);
-      getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingFileLink(false);
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        console.log(resp);
+        getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
+      } catch (error) {
+        console.error(error);
+      }
     }
+    setLoadingFileLink(false);
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -201,46 +99,81 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   };
 
   return (
-    <div>
-      <Select
-        value={columnNames}
-        onChange={handleChange}
-        renderValue={(selected) => (selected as string[]).join(", ")}
-        multiple
-      >
-        {file.columns.map((v) => (
-          <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
-            <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-            <ListItemText
-              primary={
-                `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
-              }
-              secondary={v.unit}
-            />
-          </MenuItem>
-        ))}
-      </Select>
-      {loadingFileLink ? (
-        <CircularProgress />
-      ) : (
-        <Button onClick={handleRequestFile} disabled={columnNames.length === 0}>
-          {"Request File"}
+    <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
+      <DialogTitle>
+        {file && file.name}
+        <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Select
+          value={columnNames}
+          onChange={handleChange}
+          renderValue={(selected) => (selected as string[]).join(", ")}
+          multiple
+        >
+          {file.columns.map((v) => (
+            <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
+              <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
+              <ListItemText
+                primary={
+                  `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
+                }
+                secondary={v.unit}
+              />
+            </MenuItem>
+          ))}
+        </Select>
+        {loadingFileLink ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            onClick={handleRequestFile}
+            disabled={columnNames.length === 0}
+          >
+            {"Request File"}
+          </Button>
+        )}
+        <TextField
+          label="url"
+          value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
+          InputProps={{ readOnly: true }}
+        />
+        <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
+          Copy MATLAB Snippet
         </Button>
-      )}
-      <TextField
-        label="url"
-        value={downloadUrl ? urlToMatlabCode(downloadUrl) : ""}
-        InputProps={{ readOnly: true }}
-      />
-      <Button disabled={downloadUrl === undefined} onClick={copyToClipboard}>
-        Copy MATLAB Snippet
-      </Button>
-      <Typography>{copySuccess}</Typography>
-      <FilePreview file={file}></FilePreview>
-    </div>
+
+        <Typography>{copySuccess}</Typography>
+        <FilePreview file={file}></FilePreview>
+        {metadata ? (
+          <UploadListItem
+            file={{
+              file: file,
+              uploadInfo: null,
+              setMetadata: (k: string, v: string) => {
+                let tmp = JSON.parse(JSON.stringify(metadata));
+                (tmp as any)[k] = v;
+                setMetadata(tmp);
+              },
+              metadata: metadata,
+            }}
+          ></UploadListItem>
+        ) : null}
+        <Button onClick={onExited}>Cancel</Button>
+        <Button
+          onClick={() => {
+            metadata && setFileMetadata(file, metadata).then(onExited);
+          }}
+        >
+          Save and Close
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 export default FileModal;
 
 const urlToMatlabCode = (url: string) =>
   `if ~exist('d', 'var');disp('Loading data...');d = webread("${url}", weboptions('ContentType','table'));disp('Loaded');end`;
+
+const getPathForCachedFile = (fileId: string, csvFileName: string) =>
+  `prototype/${fileId}/${csvFileName}`;
