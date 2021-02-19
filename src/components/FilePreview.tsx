@@ -11,6 +11,7 @@ import {
   ListItem,
   Grid,
   Checkbox,
+  CircularProgress,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
@@ -107,6 +108,6 @@ const FilePreview: React.FC<Props> = ({ file }) => {
       </div>
     );
 
-  return null;
+  return <CircularProgress />;
 };
 export default FilePreview;

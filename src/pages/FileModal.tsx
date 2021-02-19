@@ -40,7 +40,6 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   useEffect(() => {
     file && setMetadata(file.metadata);
   }, [file]);
-  // const classes = useStyles();
 
   if (!file) return null;
   async function handleRequestFile() {
