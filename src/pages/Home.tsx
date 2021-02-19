@@ -33,7 +33,7 @@ import { DateRangePicker, DateRange } from "materialui-daterange-picker";
 import FileModal from "./FileModal";
 import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
-import { Container, AppBar, Toolbar, Typography } from "@material-ui/core";
+import { Container, AppBar, Toolbar } from "@material-ui/core";
 
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
@@ -94,11 +94,26 @@ const Home: React.FC = () => {
       disableGutters={true}
     >
       <AppBar position="sticky">
-        <Toolbar >
-          <Grid justify="space-between" container spacing={1} style={{display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
-            <Grid item >
-              <a href="/home"><img src={fullWhite} style={{height: "4.7vh"}}></img></a>
-              {/* <Typography>MIT Motorsports DAQ App</Typography> */}
+        <Toolbar>
+          <Grid
+            justify="space-between"
+            container
+            spacing={1}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Grid item>
+              <a href="/home">
+                <img
+                  src={fullWhite}
+                  alt="MIT Motorsports"
+                  style={{ height: "4.7vh" }}
+                ></img>
+              </a>
             </Grid>
             <Grid item>
               <Button
