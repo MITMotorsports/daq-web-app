@@ -57,7 +57,7 @@ const Home: React.FC = () => {
   const fuse = new Fuse(logFiles, searchOptions);
 
   const [filters] = useState<Map<string, FileFilter>>(
-    new Map<string, FileFilter>()
+    new Map<string, FileFilter>([["deleted", (l: LogFile) => !l.deleted]])
   );
   const setFilters = async (name: string, f: FileFilter) => {
     if (filters) filters.set(name, f);
@@ -214,6 +214,7 @@ const Home: React.FC = () => {
                       key={f.id}
                       file={f}
                       onClick={() => setSelectedFile(f)}
+                      reloadFiles={reloadFiles}
                     />
                   ) : null
                 )
@@ -268,23 +269,14 @@ const Home: React.FC = () => {
           <Button onClick={() => setShowUploadModal(false)}>Done</Button>
         </DialogContent>
       </Dialog>
-      <Dialog
-        open={selectedFile !== null}
-        onClose={() => setSelectedFile(null)}
-        maxWidth="lg"
-        fullWidth
-      >
-        <DialogTitle>
-          {selectedFile && selectedFile.name}
-          <Typography>
-            {selectedFile && selectedFile.uploadDate.toLocaleString()}
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <FileModal file={selectedFile} />
-          <Button onClick={() => setSelectedFile(null)}>Close</Button>
-        </DialogContent>
-      </Dialog>
+
+      <FileModal
+        file={selectedFile}
+        onExited={() => {
+          setSelectedFile(null);
+          reloadFiles();
+        }}
+      />
     </Container>
   );
 };

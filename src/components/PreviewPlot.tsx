@@ -1,8 +1,5 @@
 import React from "react";
-// https://github.com/plotly/react-plotly.js/issues/135#issuecomment-501398125
-import Plotly from "plotly.js-basic-dist";
-import createPlotlyComponent from "react-plotly.js/factory";
-const Plot = createPlotlyComponent(Plotly);
+import Plot from "react-plotly.js";
 
 const PreviewPlot: React.FC<{
   name: string;
