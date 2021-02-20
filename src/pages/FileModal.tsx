@@ -30,9 +30,9 @@ interface FileModalProps {
 
 const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
-  const [copySuccess, setCopySuccess] = useState("");
-  const [columnNames, setColumnNames] = React.useState<string[]>([]);
-  const [loadingFileLink, setLoadingFileLink] = React.useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [columnNames, setColumnNames] = useState<string[]>([]);
+  const [loadingFileLink, setLoadingFileLink] = useState(false);
 
   const [metadata, setMetadata] = useState<FileMetadata | undefined>(
     file?.metadata
@@ -94,7 +94,7 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     navigator.clipboard.writeText(
       downloadUrl ? urlToMatlabCode(downloadUrl) : ""
     );
-    setCopySuccess("Copied!");
+    setCopySuccess(true);
   };
 
   return (
@@ -141,7 +141,7 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
           Copy MATLAB Snippet
         </Button>
 
-        <Typography>{copySuccess}</Typography>
+        {copySuccess ? <Typography>Copied!</Typography> : null}
         <FilePreview file={file}></FilePreview>
         {metadata ? (
           <UploadListItem

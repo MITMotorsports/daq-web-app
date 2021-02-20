@@ -67,7 +67,9 @@ export const getFiles = async () => {
       uploadDate: (docData!.uploaded as firebase.firestore.Timestamp).toDate(),
       metadata: docData.metadata,
       deleted: docData.deleted,
-      cache: docData.cache,
+      cache: docData.cache
+        ? new Map(Object.entries(docData.cache))
+        : docData.cache,
     });
   });
   return files;
