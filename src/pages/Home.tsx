@@ -107,13 +107,11 @@ const Home: React.FC = () => {
             }}
           >
             <Grid item>
-              <a href="/home">
-                <img
-                  src={fullWhite}
-                  alt="MIT Motorsports"
-                  style={{ height: "4.7vh" }}
-                ></img>
-              </a>
+              <img
+                src={fullWhite}
+                alt="MIT Motorsports"
+                style={{ height: "4.7vh" }}
+              />
             </Grid>
             <Grid item>
               <Button
