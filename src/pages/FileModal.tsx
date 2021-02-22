@@ -16,12 +16,7 @@ import {
   ListItem,
   Grid,
   Checkbox,
-  ListItemText,
   CircularProgress,
-  Select,
-  MenuItem,
-  MenuList,
-  Box,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -160,7 +155,6 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   const [copySuccess, setCopySuccess] = useState("");
   const [columnNames, setColumnNames] = React.useState<string[]>([]);
   const [loadingFileLink, setLoadingFileLink] = React.useState(false);
-  const [selectionNames, setSelectionNames] = React.useState<string[]>([]);
 
 
 
@@ -197,10 +191,11 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
     }
   }
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    console.log(event.target.value)
+  const handleChange = (event: React.ChangeEvent<{}>) => {
+    const eTarget =  event.target as HTMLTextAreaElement;
+    console.log(eTarget)
 
-    setColumnNames(event.target.value as string[]);
+    setColumnNames(eTarget.value as unknown as string[]);
   };
 
   if (file === null) {
@@ -217,35 +212,14 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   
   const frequencyOptions = ['10','50','100','100'];
 
-  const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
-  `${v.message}.${v.field} as ${v.alias}`);
+  // const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
+  // `${v.message}.${v.field} as ${v.alias}`);
 
   // columnArray.unshift('Select all');
 
 
   return (
     <>
-{/*     
-    <Select
-        value={columnNames}
-        onChange={handleChange}
-        renderValue={(selected) => (selected as string[]).join(", ")}
-        multiple
-        fullWidth={true}
-        style={{width:"50%"}}
-      >
-
-        {file.columns.map((v) => (
-          <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
-            <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-            <ListItemText
-              primary={`${v.message}.${v.field} as ${v.alias}`}
-              secondary={v.unit}
-            />
-          </MenuItem>
-        ))}
-      
-      </Select> */}
 
       <Autocomplete
         autoComplete
@@ -263,8 +237,8 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       autoComplete
       multiple
       disableCloseOnSelect
-      options={columnArray}
-      defaultValue={columnArray}
+      options={columnNames}
+      defaultValue={columnNames}
       style={{width:"50vw", overflowY:'scroll', maxHeight:'115px'}}
       renderOption={(option, { selected }) => (
         <React.Fragment>
@@ -277,20 +251,7 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
         </React.Fragment>
       )}
       renderInput={(params) => <TextField {...params} label="Request File(s)" margin="normal" />}
-      onChange={
-        (event: React.ChangeEvent<{}>, value: string[]) => {
-          setSelectionNames(value as string[]);
-      console.log(value, value.findIndex)
-      value.forEach(val=> 
-        (val==='Select all') ?
-          setColumnNames(columnArray)
-          // setSelectionNames(file.columns.map((v)=> `${v.message}.${v.field} as ${v.alias}`))
-          // console.log(columnArray, 'this is what i')
-          // setSelectionNames(columnArray)
-          :
-          
-        console.log(val, 'is the value'))
-    }}
+      onChange={handleChange}
       />
 
       
