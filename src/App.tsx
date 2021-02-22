@@ -6,10 +6,13 @@ import {
   Switch,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import SignIn from './components/SignIn';
+
 
 const App: React.FC = () => (
   <Router>
     <Switch>
+      <Route path="/signin" component={SignIn}/>
       <Route path="/home" component={Home} exact={true} />
       <Route exact path="/" render={() => <Redirect to="/home" />} />
     </Switch>
