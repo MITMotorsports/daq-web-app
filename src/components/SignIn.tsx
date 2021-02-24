@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -100,6 +101,7 @@ const reducer = (state: State, action: Action): State => {
 const SignIn = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [signInSuccess, setSignInSuccess] = React.useState(false);
 
   useEffect(() => {
     if (state.username.trim() && state.password.trim()) {
@@ -121,11 +123,13 @@ const SignIn = () => {
         type: 'loginSuccess',
         payload: 'Login Successfully'
       });
+      setSignInSuccess(true);
     } else {
       dispatch({
         type: 'loginFailed',
         payload: 'Incorrect username or password'
       });
+      setSignInSuccess(false);
     }
   };
 

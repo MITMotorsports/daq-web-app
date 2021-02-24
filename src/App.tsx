@@ -20,7 +20,10 @@ const App: React.FC = () => (
       <Route path="/home" component={Home} exact={true} />
       <Route exact path="/" render={() => <Redirect to="/home" />} />
     </Switch>
-  </Router>
+  </Router> 
+
+
+
 );
 
 export default App;
