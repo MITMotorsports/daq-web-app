@@ -123,7 +123,10 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
           ))}
         </Select>
         {loadingFileLink ? (
+          <>
+         
           <CircularProgress />
+          </>
         ) : (
           <Button
             onClick={handleRequestFile}
