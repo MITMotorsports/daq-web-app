@@ -82,8 +82,9 @@ export interface FilePreviewData {
 }
 
 export const getPreviewData = async (file: LogFile) => {
+  let resp;
   if (file?.cache?.has("preview")) {
-    var resp = await axios.get(await getDownloadUrlForPath(getPathForCachedFile(file.id, file.cache.get("preview")!)));
+    resp = await axios.get(await getDownloadUrlForPath(getPathForCachedFile(file.id, file.cache.get("preview")!)));
   }
   else {
     resp = await axios.post(
