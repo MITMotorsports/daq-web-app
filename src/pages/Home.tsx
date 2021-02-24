@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
 import fullWhite from "../images/fullWhite.png";
+import bugIssues from "../images/bugIssues.svg";
+import "../utilities.css";
 
 import {
   List,
@@ -125,13 +127,20 @@ const Home: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Container>
-        <Tabs
+        <div
+        style={{display: "flex", flexDirection: "row", justifyContent:"space-between"}}>
+          <Tabs
           onChange={(e, val) => setFileTypeSelection(val)}
           value={fileTypeSelection}
         >
           <Tab label="Logs" value="logs" tabIndex={0}></Tab>
           <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
+          
         </Tabs>
+        <a href="https://github.com/MITMotorsports/daq-web-app/issues/new" >
+          <img src={bugIssues} style={{width:"3vh", margin: "1vh"}} className="u-bug"></img></a>
+        </div>
+        
 
         <List>
           <ListItem>
