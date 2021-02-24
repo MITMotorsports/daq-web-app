@@ -64,7 +64,7 @@ const SignIn = () => {
       })
 
       // An error is thrown if login fails for any reason, which we catch and handle here.
-      // Can you figure out a way to display the error message to the user?
+      // TODO: Can you figure out a way to display the error message to the user?
       // Maybe store the error message as a state variable and display it in red text.
       .catch((error: firebase.auth.Error) => {
         console.error("Failed to sign in");
@@ -86,7 +86,7 @@ const SignIn = () => {
             placeholder="Email"
             margin="normal"
             onChange={(e) => {
-              /* Set state using this value */
+              // TODO: Set state using this value
             }}
           />
           <TextField
@@ -95,7 +95,7 @@ const SignIn = () => {
             placeholder="Password"
             margin="normal"
             onChange={(e) => {
-              /* Set state using this value */
+              // TODO: Set state using this value
             }}
           />
         </CardContent>
@@ -107,7 +107,7 @@ const SignIn = () => {
             className={classes.loginBtn}
             onClick={handleLogin}
             disabled={
-              undefined /* Button should be disabled if `email` or `password` has length === 0 */
+              undefined // TODO: Button should be disabled if `email` or `password` has length === 0
             }
           >
             Login
