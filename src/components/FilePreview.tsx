@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import GPSMap from "../components/GPSMap";
 import PreviewPlot from "../components/PreviewPlot";
-
 import { LogFile, FilePreviewData, getPreviewData } from "../data/files";
 import {
   Typography,
@@ -87,22 +86,17 @@ const FilePreview: React.FC<Props> = ({ file }) => {
                 <Alert severity="warning">No fields available</Alert>
               )}
             </List>
-            <div style={{ flexGrow: 1 }}>
-              <Grid container spacing={0}>
-                {data.fields_data
-                  ? Array.from(data.fields_data.keys()).map((field) =>
-                      !!fieldChecked?.find((k) => k === field) ? (
-                        <Grid item xs>
-                          <PreviewPlot
-                            name={field}
-                            data={data.fields_data?.get(field)}
-                          />
-                        </Grid>
-                      ) : null
-                    )
-                  : null}
-              </Grid>
-            </div>
+
+            {data.fields_data
+              ? (() => {
+                  const checked_fields = Array.from(
+                    data.fields_data.keys()
+                  ).filter((field) => !!fieldChecked?.find((k) => k === field));
+                  return (
+                    <PreviewPlot data={data} checkedFields={checked_fields} />
+                  );
+                })()
+              : null}
           </Grid>
         </Grid>
       </div>
