@@ -191,12 +191,12 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
     }
   }
 
-  const handleChange = (event: React.ChangeEvent<{}>) => {
-    const eTarget =  event.target as HTMLTextAreaElement;
-    console.log(eTarget)
+  // const handleChange = (event: React.ChangeEvent<{}>) => {
+  //   const eTarget =  event.target as HTMLTextAreaElement;
+  //   console.log(eTarget)
 
-    setColumnNames(eTarget.value as unknown as string[]);
-  };
+  //   setColumnNames(eTarget.value as unknown as string[]);
+  // };
 
   if (file === null) {
     return <Typography>No File Selected</Typography>;
@@ -212,8 +212,8 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
   
   const frequencyOptions = ['10','50','100','100'];
 
-  // const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
-  // `${v.message}.${v.field} as ${v.alias}`);
+  const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
+  `${v.message}.${v.field} as ${v.alias}`);
 
   // columnArray.unshift('Select all');
 
@@ -237,8 +237,8 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
       autoComplete
       multiple
       disableCloseOnSelect
-      options={columnNames}
-      defaultValue={columnNames}
+      options={columnArray}
+      defaultValue={columnArray}
       style={{width:"50vw", overflowY:'scroll', maxHeight:'115px'}}
       renderOption={(option, { selected }) => (
         <React.Fragment>
@@ -251,8 +251,11 @@ const FileModal: React.FC<FileModalProps> = ({ file }) => {
         </React.Fragment>
       )}
       renderInput={(params) => <TextField {...params} label="Request File(s)" margin="normal" />}
-      onChange={handleChange}
-      />
+      onChange={(event: any, newValue: string[]) => {
+        setColumnNames(newValue);
+        console.log(columnNames);
+      }}
+    />
 
       
 
