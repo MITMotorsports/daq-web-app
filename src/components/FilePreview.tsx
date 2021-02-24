@@ -66,6 +66,7 @@ const FilePreview: React.FC<Props> = ({ file }) => {
             >
               {data.fields_data && data.fields_data.size > 0 ? (
                 Array.from(data.fields_data.keys()).map((x) => (
+                  (x!=="time")? 
                   <ListItem style={{ padding: 0, width: "auto" }}>
                     <Checkbox
                       checked={!!fieldChecked?.find((k) => k === x)}
@@ -81,7 +82,7 @@ const FilePreview: React.FC<Props> = ({ file }) => {
                       }}
                     ></Checkbox>
                     <Typography>{x}</Typography>
-                  </ListItem>
+                  </ListItem> : null
                 ))
               ) : (
                 <Alert severity="warning">No fields available</Alert>
