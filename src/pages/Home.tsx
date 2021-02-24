@@ -138,7 +138,7 @@ const Home: React.FC = () => {
           
         </Tabs>
         <a href="https://github.com/MITMotorsports/daq-web-app/issues/new" >
-          <img src={bugIssues} style={{width:"3vh", margin: "1vh"}} className="u-bug"></img></a>
+          <img src={bugIssues} style={{width:"3vh", margin: "1vh"}} alt="Click Here to Report Bug with App" className="u-bug"></img></a>
         </div>
         
 
