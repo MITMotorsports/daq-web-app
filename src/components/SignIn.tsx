@@ -43,6 +43,7 @@ const SignIn = () => {
   // is email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [failedLogin, setFailedLogin] = useState(false);
 
   // `history` is used to redirect the user back to the homepage
   // once they have logged in
@@ -65,11 +66,10 @@ const SignIn = () => {
       })
 
       // An error is thrown if login fails for any reason, which we catch and handle here.
-      // TODO: Can you figure out a way to display the error message to the user?
-      // Maybe store the error message as a state variable and display it in red text.
       .catch((error: firebase.auth.Error) => {
         console.error("Failed to sign in");
         console.log(error.message);
+        setFailedLogin(true);
       });
   };
 
@@ -87,7 +87,7 @@ const SignIn = () => {
             placeholder="Email"
             margin="normal"
             onChange={(e) => {
-              // TODO: Set state using this value
+              setEmail(e.target.value);
             }}
           />
           <TextField
@@ -96,11 +96,14 @@ const SignIn = () => {
             placeholder="Password"
             margin="normal"
             onChange={(e) => {
-              // TODO: Set state using this value
+              setPassword(e.target.value);
             }}
           />
         </CardContent>
-        <CardActions>
+        <CardActions style={{ display: "flex", flexDirection: "column" }}>
+          {failedLogin === true ? (
+            <h3 style={{ color: "red", fontWeight: "bolder" }}>Login failed</h3>
+          ) : null}
           <Button
             variant="contained"
             size="large"
@@ -108,7 +111,7 @@ const SignIn = () => {
             className={classes.loginBtn}
             onClick={handleLogin}
             disabled={
-              undefined // TODO: Button should be disabled if `email` or `password` has length === 0
+              email.length === 0 || password.length === 0 ? true : false
             }
           >
             Login
