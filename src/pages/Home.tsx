@@ -238,10 +238,11 @@ const Home: React.FC = () => {
               .sort((a, b) => (a[0] > b[0] ? -1 : 1))
               .map(([k, v]) => [new Date(k).toDateString(), v]);
 
-            return groupItems.map((item, i) =>
-              item[1].length > 0 ? (
-                !searchText ? (
-                  <Container>
+            return groupItems.map(
+              (item, i) =>
+                item[1].length > 0 &&
+                (!searchText ? (
+                  <Container key={i}>
                     <ListItem
                       button
                       onClick={() => {
@@ -261,11 +262,10 @@ const Home: React.FC = () => {
                     </Collapse>
                   </Container>
                 ) : (
-                  <Container>
+                  <Container key={i}>
                     <List>{item[1]}</List>
                   </Container>
-                )
-              ) : null
+                ))
             );
           })()}
         </List>
