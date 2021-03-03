@@ -86,9 +86,8 @@ const SignIn = () => {
             placeholder="Email"
             margin="normal"
             error={errorText.length > 0}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
           />
           <TextField
             fullWidth
@@ -96,9 +95,8 @@ const SignIn = () => {
             placeholder="Password"
             margin="normal"
             error={errorText.length > 0}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
           />
         </CardContent>
         <CardActions style={{ display: "flex", flexDirection: "column" }}>
