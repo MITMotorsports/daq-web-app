@@ -12,21 +12,24 @@ import {
   Button,
   Typography,
   Checkbox,
-  ListItemText,
   CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
-  Select,
-  MenuItem,
 } from "@material-ui/core";
 
 import UploadListItem from "../components/UploadListItem";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 interface FileModalProps {
   file: LogFile | null;
   onExited: () => void;
 }
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
@@ -82,10 +85,6 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     setLoadingFileLink(false);
   }
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setColumnNames(event.target.value as string[]);
-  };
-
   if (file === null) {
     return <Typography>No File Selected</Typography>;
   }
@@ -97,6 +96,13 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     setCopySuccess(true);
   };
 
+  const frequencyOptions = ["10", "50", "100", "100"];
+
+  const columnArray =
+    file.columns.length === 0
+      ? []
+      : file.columns.map((v) => `${v.message}.${v.field} as ${v.alias}`);
+
   return (
     <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
       <DialogTitle>
@@ -104,24 +110,44 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
         <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
       </DialogTitle>
       <DialogContent>
-        <Select
-          value={columnNames}
-          onChange={handleChange}
-          renderValue={(selected) => (selected as string[]).join(", ")}
+        <Autocomplete
+          autoComplete
           multiple
-        >
-          {file.columns.map((v) => (
-            <MenuItem key={v.message + v.field + v.alias} value={v.alias}>
-              <Checkbox checked={columnNames.indexOf(v.alias) > -1} />
-              <ListItemText
-                primary={
-                  `${v.message}.${v.field}` + (v.alias ? ` as ${v.alias}` : "")
-                }
-                secondary={v.unit}
-              />
-            </MenuItem>
-          ))}
-        </Select>
+          disableCloseOnSelect
+          options={frequencyOptions}
+          renderInput={(params) => (
+            <TextField {...params} label="Sample Frequency" margin="normal" />
+          )}
+        />
+
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Autocomplete
+            autoComplete
+            multiple
+            disableCloseOnSelect
+            options={columnArray}
+            defaultValue={columnArray}
+            style={{ width: "50vw", overflowY: "scroll", maxHeight: "115px" }}
+            renderOption={(option, { selected }) => (
+              <React.Fragment>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  checked={selected}
+                />
+                {option}
+              </React.Fragment>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label="Request File(s)" margin="normal" />
+            )}
+            onChange={(event: any, newValue: string[]) => {
+              setColumnNames(newValue);
+              console.log(columnNames);
+            }}
+          />
+        </div>
+
         {loadingFileLink ? (
           <CircularProgress />
         ) : (
