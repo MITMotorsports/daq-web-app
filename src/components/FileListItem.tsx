@@ -25,7 +25,7 @@ const FileListItem: React.FC<FileListItemProps> = ({
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
-  getDownloadUrlForFile(file.id, "parsed")
+  getDownloadUrlForFile(file.id, "parsed.npz")
     .then((resp) => setDownloadUrl(resp))
     .catch(() =>
       console.warn(`Could not fetch download link for file ${file.id}`)
@@ -62,7 +62,11 @@ const FileListItem: React.FC<FileListItemProps> = ({
           <Button onClick={() => onClick()} variant="contained">
             MAT
           </Button>
-          <Button disabled={downloadUrl === undefined} variant="contained">
+          <Button
+            disabled={downloadUrl === undefined}
+            href={downloadUrl ?? ""}
+            variant="contained"
+          >
             NPZ
           </Button>
         </ButtonGroup>
