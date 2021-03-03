@@ -46,7 +46,13 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
 
           <FormControl required style={{ minWidth: 90 }}>
             <InputLabel>Chassis</InputLabel>
-            <Select autoWidth value={file.metadata.chassis} onChange={e => file.setMetadata('chassis',e.target.value as string)}>
+            <Select
+              autoWidth
+              value={file.metadata.chassis}
+              onChange={(e) =>
+                file.setMetadata("chassis", e.target.value as string)
+              }
+            >
               <MenuItem value="" disabled>
                 Chassis
               </MenuItem>
@@ -59,7 +65,13 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
 
           <FormControl required style={{ minWidth: 115 }}>
             <InputLabel>Location</InputLabel>
-            <Select autoWidth value={file.metadata.location} onChange={e => file.setMetadata('location', e.target.value as string)}>
+            <Select
+              autoWidth
+              value={file.metadata.location}
+              onChange={(e) =>
+                file.setMetadata("location", e.target.value as string)
+              }
+            >
               <MenuItem value="" disabled>
                 Location
               </MenuItem>
@@ -71,7 +83,13 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
           </FormControl>
           <FormControl required style={{ minWidth: 150 }}>
             <InputLabel>Activity</InputLabel>
-            <Select autoWidth value={file.metadata.activity} onChange={e => file.setMetadata('activity', e.target.value as string)}>
+            <Select
+              autoWidth
+              value={file.metadata.activity}
+              onChange={(e) =>
+                file.setMetadata("activity", e.target.value as string)
+              }
+            >
               <MenuItem value="" disabled>
                 Activity
               </MenuItem>
@@ -81,8 +99,20 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
             </Select>
             <FormHelperText>Required</FormHelperText>
           </FormControl>
-          <TextField label="Test Number" value={file.metadata.testNum} onChange={e => file.setMetadata('testNum', e.target.value as string)}/>
-          <TextField label="Notes" value={file.metadata.notes} onChange={e => file.setMetadata('notes', e.target.value as string)}/>
+          <TextField
+            label="Test Number"
+            value={file.metadata.testNum}
+            onChange={(e) =>
+              file.setMetadata("testNum", e.target.value as string)
+            }
+          />
+          <TextField
+            label="Notes"
+            value={file.metadata.notes}
+            onChange={(e) =>
+              file.setMetadata("notes", e.target.value as string)
+            }
+          />
 
           {file.uploadInfo !== null && (
             <Box width="100%" m={1}>

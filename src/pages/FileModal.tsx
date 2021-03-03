@@ -19,19 +19,17 @@ import {
 } from "@material-ui/core";
 
 import UploadListItem from "../components/UploadListItem";
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 interface FileModalProps {
   file: LogFile | null;
   onExited: () => void;
 }
 
-
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
 
 const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
@@ -87,7 +85,6 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     setLoadingFileLink(false);
   }
 
-
   if (file === null) {
     return <Typography>No File Selected</Typography>;
   }
@@ -99,10 +96,12 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     setCopySuccess(true);
   };
 
-  const frequencyOptions = ['10','50','100','100'];
+  const frequencyOptions = ["10", "50", "100", "100"];
 
-  const columnArray = (file.columns.length ===0) ? []: file.columns.map((v)=>
-  `${v.message}.${v.field} as ${v.alias}`);
+  const columnArray =
+    file.columns.length === 0
+      ? []
+      : file.columns.map((v) => `${v.message}.${v.field} as ${v.alias}`);
 
   return (
     <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
@@ -111,42 +110,43 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
         <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
       </DialogTitle>
       <DialogContent>
+        <Autocomplete
+          autoComplete
+          multiple
+          disableCloseOnSelect
+          options={frequencyOptions}
+          renderInput={(params) => (
+            <TextField {...params} label="Sample Frequency" margin="normal" />
+          )}
+        />
 
-<Autocomplete
-  autoComplete
-  multiple
-  disableCloseOnSelect
-  options={frequencyOptions}
-  renderInput={(params) => <TextField {...params} label="Sample Frequency" margin="normal" />}
-
-/>
-
-    <div
-    style={{display: 'flex', flexDirection:'row',}}>
-
-    <Autocomplete
-    autoComplete
-    multiple
-    disableCloseOnSelect
-    options={columnArray}
-    defaultValue={columnArray}
-    style={{width:"50vw", overflowY:'scroll', maxHeight:'115px'}}
-    renderOption={(option, { selected }) => (
-      <React.Fragment>
-        <Checkbox
-        icon={icon}
-        checkedIcon={checkedIcon}
-      
-        checked={selected}/>
-        {option}
-      </React.Fragment>
-    )}
-    renderInput={(params) => <TextField {...params} label="Request File(s)" margin="normal" />}
-    onChange={(event: any, newValue: string[]) => {
-      setColumnNames(newValue);
-      console.log(columnNames);
-    }}
-    /></div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Autocomplete
+            autoComplete
+            multiple
+            disableCloseOnSelect
+            options={columnArray}
+            defaultValue={columnArray}
+            style={{ width: "50vw", overflowY: "scroll", maxHeight: "115px" }}
+            renderOption={(option, { selected }) => (
+              <React.Fragment>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  checked={selected}
+                />
+                {option}
+              </React.Fragment>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label="Request File(s)" margin="normal" />
+            )}
+            onChange={(event: any, newValue: string[]) => {
+              setColumnNames(newValue);
+              console.log(columnNames);
+            }}
+          />
+        </div>
 
         {loadingFileLink ? (
           <CircularProgress />
