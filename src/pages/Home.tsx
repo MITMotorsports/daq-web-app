@@ -128,19 +128,28 @@ const Home: React.FC = () => {
       </AppBar>
       <Container>
         <div
-        style={{display: "flex", flexDirection: "row", justifyContent:"space-between"}}>
-          <Tabs
-          onChange={(e, val) => setFileTypeSelection(val)}
-          value={fileTypeSelection}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          <Tab label="Logs" value="logs" tabIndex={0}></Tab>
-          <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
-          
-        </Tabs>
-        <a href="https://github.com/MITMotorsports/daq-web-app/issues/new" >
-          <img src={bugIssues} style={{width:"3vh", margin: "1vh"}} alt="Click Here to Report Bug with App" className="u-bug"></img></a>
+          <Tabs
+            onChange={(e, val) => setFileTypeSelection(val)}
+            value={fileTypeSelection}
+          >
+            <Tab label="Logs" value="logs" tabIndex={0}></Tab>
+            <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
+          </Tabs>
+          <a href="https://github.com/MITMotorsports/daq-web-app/issues/new">
+            <img
+              src={bugIssues}
+              style={{ width: "3vh", margin: "1vh" }}
+              alt="Click Here to Report Bug with App"
+              className="u-bug"
+            ></img>
+          </a>
         </div>
-        
 
         <List>
           <ListItem>
