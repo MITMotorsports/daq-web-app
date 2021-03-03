@@ -108,10 +108,11 @@ const FilePreview: React.FC<Props> = ({ file }) => {
       </div>
     );
 
-  return (<>
-  <br></br>
-  <CircularProgress 
-  style={{margin:"5vh", marginLeft:"35vw"}}/>
-  </>);
+  return (
+    <>
+      <br></br>
+      <CircularProgress style={{ margin: "5vh", marginLeft: "35vw" }} />
+    </>
+  );
 };
 export default FilePreview;
