@@ -43,7 +43,7 @@ const SignIn = () => {
   // is email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [failedLogin, setFailedLogin] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   // `history` is used to redirect the user back to the homepage
   // once they have logged in
@@ -67,9 +67,8 @@ const SignIn = () => {
 
       // An error is thrown if login fails for any reason, which we catch and handle here.
       .catch((error: firebase.auth.Error) => {
-        console.error("Failed to sign in");
-        console.log(error.message);
-        setFailedLogin(true);
+        console.error(error);
+        setErrorText(error.message);
       });
   };
 
@@ -86,6 +85,7 @@ const SignIn = () => {
             type="email"
             placeholder="Email"
             margin="normal"
+            error={errorText.length > 0}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
@@ -95,15 +95,18 @@ const SignIn = () => {
             type="password"
             placeholder="Password"
             margin="normal"
+            error={errorText.length > 0}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
           />
         </CardContent>
         <CardActions style={{ display: "flex", flexDirection: "column" }}>
-          {failedLogin === true ? (
-            <h3 style={{ color: "red", fontWeight: "bolder" }}>Login failed</h3>
-          ) : null}
+          {errorText.length > 0 && (
+            <h3 style={{ color: "red", fontWeight: "bolder" }}>
+              Error: {errorText}
+            </h3>
+          )}
           <Button
             variant="contained"
             size="large"
