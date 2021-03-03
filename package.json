@@ -48,8 +48,12 @@
   },
   "eslintConfig": {
     "extends": "react-app",
+    "plugins": [
+      "prettier"
+    ],
     "rules": {
-      "no-var": "error"
+      "no-var": "error",
+      "prettier/prettier": "warn"
     }
   },
   "browserslist": {
@@ -65,7 +69,8 @@
     ]
   },
   "devDependencies": {
-    "prettier": "2.0.5"
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.0.5"
   },
   "description": "DAQ Web App"
 }
