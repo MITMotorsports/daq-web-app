@@ -52,7 +52,7 @@ const FilePreview: React.FC<Props> = ({ file }) => {
               ))}
             </List>
 
-            {data.gps_coords ? <GPSMap coords={data.gps_coords} /> : null}
+            {data.gps_coords && <GPSMap coords={data.gps_coords} />}
           </Grid>
 
           <Grid item xs>
@@ -65,42 +65,47 @@ const FilePreview: React.FC<Props> = ({ file }) => {
               }}
             >
               {data.fields_data && data.fields_data.size > 0 ? (
-                Array.from(data.fields_data.keys()).map((x) => (
-                  <ListItem style={{ padding: 0, width: "auto" }}>
-                    <Checkbox
-                      checked={!!fieldChecked?.find((k) => k === x)}
-                      onChange={(e) => {
-                        let newChecked = [...fieldChecked];
-                        if (e.target.checked) {
-                          newChecked.push(x);
-                        } else {
-                          const index = fieldChecked.findIndex((k) => k === x);
-                          newChecked.splice(index, 1);
-                        }
-                        setFieldChecked(newChecked);
-                      }}
-                    ></Checkbox>
-                    <Typography>{x}</Typography>
-                  </ListItem>
-                ))
+                Array.from(data.fields_data.keys()).map(
+                  (x) =>
+                    x !== "time" && (
+                      <ListItem style={{ padding: 0, width: "auto" }}>
+                        <Checkbox
+                          checked={!!fieldChecked?.find((k) => k === x)}
+                          onChange={(e) => {
+                            let newChecked = [...fieldChecked];
+                            if (e.target.checked) {
+                              newChecked.push(x);
+                            } else {
+                              const index = fieldChecked.findIndex(
+                                (k) => k === x
+                              );
+                              newChecked.splice(index, 1);
+                            }
+                            setFieldChecked(newChecked);
+                          }}
+                        ></Checkbox>
+                        <Typography>{x}</Typography>
+                      </ListItem>
+                    )
+                )
               ) : (
                 <Alert severity="warning">No fields available</Alert>
               )}
             </List>
             <div style={{ flexGrow: 1 }}>
               <Grid container spacing={0}>
-                {data.fields_data
-                  ? Array.from(data.fields_data.keys()).map((field) =>
-                      !!fieldChecked?.find((k) => k === field) ? (
+                {data.fields_data &&
+                  Array.from(data.fields_data.keys()).map(
+                    (field) =>
+                      !!fieldChecked?.find((k) => k === field) && (
                         <Grid item xs>
                           <PreviewPlot
                             name={field}
                             data={data.fields_data?.get(field)}
                           />
                         </Grid>
-                      ) : null
-                    )
-                  : null}
+                      )
+                  )}
               </Grid>
             </div>
           </Grid>
@@ -108,6 +113,11 @@ const FilePreview: React.FC<Props> = ({ file }) => {
       </div>
     );
 
-  return <CircularProgress />;
+  return (
+    <>
+      <br></br>
+      <CircularProgress style={{ margin: "5vh", marginLeft: "35vw" }} />
+    </>
+  );
 };
 export default FilePreview;
