@@ -82,21 +82,29 @@ export interface FilePreviewData {
 }
 
 export const getPreviewData = async (file: LogFile) => {
-  const resp = await axios.post(
-    "https://us-central1-mitmotorsportsdata.cloudfunctions.net/get_preview_data",
-    {
-      file_id: file!.id,
-    },
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+  let resp;
+  if (file?.cache?.has("preview")) {
+    resp = await axios.get(
+      await getDownloadUrlForPath(
+        getPathForCachedFile(file.id, file.cache.get("preview")!)
+      )
+    );
+  } else {
+    resp = await axios.post(
+      "https://us-central1-mitmotorsportsdata.cloudfunctions.net/get_preview_data",
+      {
+        file_id: file!.id,
       },
-    }
-  );
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+  }
   const json_obj = resp.data;
-  console.log(json_obj);
   const preview_obj: FilePreviewData = {} as FilePreviewData;
   if ("gps_coords" in json_obj) {
     preview_obj["gps_coords"] = (json_obj["gps_coords"] as [
@@ -129,6 +137,9 @@ export const getDownloadUrlForFile = async (
   name: string
 ): Promise<string> =>
   firebase.storage().ref(`prototype/${fileId}/${name}`).getDownloadURL();
+
+export const getPathForCachedFile = (fileId: string, csvFileName: string) =>
+  `prototype/${fileId}/${csvFileName}`;
 
 export const getDownloadUrlForPath = async (path: string): Promise<string> =>
   firebase.storage().ref(path).getDownloadURL();
