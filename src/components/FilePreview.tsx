@@ -61,7 +61,7 @@ const FilePreview: React.FC<Props> = ({ file }) => {
                   renderValue={(selected) => (selected as string[]).join(", ")}
                   multiple
                 >
-                  {Array.from(data?.fields_data?.keys()).map((v) => (
+                  {Array.from(data?.fields_data?.keys()).map((v) => (x!== "time" && 
                     <MenuItem key={v} value={v}>
                       <ListItemText>{v}</ListItemText>
                       <Checkbox
@@ -97,6 +97,11 @@ const FilePreview: React.FC<Props> = ({ file }) => {
       </div>
     );
 
-  return <CircularProgress />;
+  return (
+    <>
+      <br></br>
+      <CircularProgress style={{ margin: "5vh", marginLeft: "35vw" }} />
+    </>
+  );
 };
 export default FilePreview;
