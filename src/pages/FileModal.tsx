@@ -5,7 +5,7 @@ import {
   getDownloadUrlForPath,
   FileMetadata,
   setFileMetadata,
-  getPathForCachedFile
+  getPathForCachedFile,
 } from "../data/files";
 import FilePreview from "../components/FilePreview";
 import {
@@ -200,5 +200,3 @@ export default FileModal;
 
 const urlToMatlabCode = (url: string) =>
   `if ~exist('d', 'var');disp('Loading data...');d = webread("${url}", weboptions('ContentType','table'));disp('Loaded');end`;
-
-

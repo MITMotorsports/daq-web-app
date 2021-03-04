@@ -61,14 +61,17 @@ const FilePreview: React.FC<Props> = ({ file }) => {
                   renderValue={(selected) => (selected as string[]).join(", ")}
                   multiple
                 >
-                  {Array.from(data?.fields_data?.keys()).map((v) => (x!== "time" && 
-                    <MenuItem key={v} value={v}>
-                      <ListItemText>{v}</ListItemText>
-                      <Checkbox
-                        checked={fieldChecked?.indexOf(v) > -1}
-                      ></Checkbox>
-                    </MenuItem>
-                  ))}
+                  {Array.from(data?.fields_data?.keys()).map(
+                    (v) =>
+                      v !== "time" && (
+                        <MenuItem key={v} value={v}>
+                          <ListItemText>{v}</ListItemText>
+                          <Checkbox
+                            checked={fieldChecked?.indexOf(v) > -1}
+                          ></Checkbox>
+                        </MenuItem>
+                      )
+                  )}
                 </Select>
               ) : (
                 <Alert severity="warning">No fields available</Alert>
