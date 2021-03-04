@@ -44,7 +44,7 @@ const UploadModal: React.FC = () => {
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: ".TSV, .tsv, .npz, .NPZ",
+    accept: ".TSV, .tsv, .npz, .NPZ, .fsae",
   });
 
   const handleUpload = () => {
@@ -114,7 +114,7 @@ const UploadModal: React.FC = () => {
               <Typography>
                 Drag 'n' drop some files here, or click to select files
               </Typography>
-              <Typography>(only TSV and NPZ files allowed)</Typography>
+              <Typography>(only TSV, NPZ, FSAE files allowed)</Typography>
             </div>
           )}
         </CardContent>
