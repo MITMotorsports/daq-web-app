@@ -85,16 +85,15 @@ const FilePreview: React.FC<Props> = ({ file }) => {
             {data.gps_coords ? <GPSMap coords={data.gps_coords} /> : null}
           </Grid>
           <Grid item>
-            {data.fields_data
-              ? (() => {
-                  const checked_fields = Array.from(
-                    data.fields_data.keys()
-                  ).filter((field) => !!fieldChecked?.find((k) => k === field));
-                  return (
-                    <PreviewPlot data={data} checkedFields={checked_fields} />
-                  );
-                })()
-              : null}
+            {data.fields_data &&
+              (() => {
+                const checked_fields = Array.from(
+                  data.fields_data.keys()
+                ).filter((field) => !!fieldChecked?.find((k) => k === field));
+                return (
+                  <PreviewPlot data={data} checkedFields={checked_fields} />
+                );
+              })()}
           </Grid>
         </Grid>
       </div>
