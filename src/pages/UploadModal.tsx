@@ -15,7 +15,7 @@ import {
   Box,
   Typography,
 } from "@material-ui/core";
-import { FileMetadata, LogFile } from "../data/files";
+import { FileMetadata, LogFile, MetadataField } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
   uploadInfo: firebase.storage.UploadTask | null;
@@ -76,6 +76,16 @@ const UploadModal: React.FC = () => {
           );
         }
       });
+  };
+
+  // eslint-disable-next-line
+  const updateMetadataFields = (field: MetadataField, value: string) => {
+    setFilenames(
+      filenames.map((filename) => {
+        filename.metadata[field] = value;
+        return filename;
+      })
+    );
   };
 
   return (
