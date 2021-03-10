@@ -60,7 +60,7 @@ const UploadModal: React.FC = () => {
             .storage()
             .ref(
               `prototype/${firestoreRef.id}/` +
-                (isParsed ? "parsed.npz" : "raw")
+                (isParsed ? "parsed.npz" : "raw." + ext)
             );
 
           // Begin upload
