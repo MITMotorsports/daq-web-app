@@ -29,6 +29,14 @@ export interface LogFile {
   metadata: FileMetadata;
   cache?: Map<string, string>;
 }
+
+export type MetadataField =
+  | "chassis"
+  | "location"
+  | "activity"
+  | "testNum"
+  | "notes";
+
 export interface FileMetadata {
   chassis?: string;
   location?: string;

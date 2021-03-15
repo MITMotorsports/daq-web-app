@@ -15,8 +15,8 @@ import {
   ListItem,
 } from "@material-ui/core";
 
-const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
-const LOCATION_OPTIONS = [
+export const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
+export const LOCATION_OPTIONS = [
   "Palmer",
   "Alley",
   "Lot",
@@ -24,7 +24,7 @@ const LOCATION_OPTIONS = [
   "Competition",
   "Other",
 ];
-const CAR_ACTIVITIES_OPTIONS = [
+export const CAR_ACTIVITIES_OPTIONS = [
   "Endurance",
   "Acceleration",
   "Skidpad",
@@ -39,50 +39,119 @@ interface UploadListItemProps {
 
 const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
   return (
-    <ListItem>
+    <ListItem style={{ fontSize: "1vh", margin: "0", padding: "0" }}>
       <Card variant="outlined">
-        <CardContent>
+        <CardContent style={{ fontSize: "1vh", margin: "0", padding: "0.3vh" }}>
           <Typography>{file.file.name}</Typography>
 
           <FormControl required style={{ minWidth: 90 }}>
             <InputLabel>Chassis</InputLabel>
-            <Select autoWidth value={file.metadata.chassis} onChange={e => file.setMetadata('chassis',e.target.value as string)}>
-              <MenuItem value="" disabled>
+            <Select
+              autoWidth
+              value={file.metadata.chassis}
+              onChange={(e) =>
+                file.setMetadata("chassis", e.target.value as string)
+              }
+            >
+              <MenuItem
+                style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                value=""
+                disabled
+              >
                 Chassis
               </MenuItem>
               {CHASSIS_OPTIONS.map((chassis) => (
-                <MenuItem value={chassis}>{chassis}</MenuItem>
+                <MenuItem
+                  style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                  value={chassis}
+                >
+                  {chassis}
+                </MenuItem>
               ))}
             </Select>
-            <FormHelperText>Required</FormHelperText>
+            <FormHelperText
+              style={{ fontSize: "1vh", margin: "0", padding: "0.3vh" }}
+            >
+              Required
+            </FormHelperText>
           </FormControl>
 
           <FormControl required style={{ minWidth: 115 }}>
             <InputLabel>Location</InputLabel>
-            <Select autoWidth value={file.metadata.location} onChange={e => file.setMetadata('location', e.target.value as string)}>
-              <MenuItem value="" disabled>
+            <Select
+              autoWidth
+              value={file.metadata.location}
+              onChange={(e) =>
+                file.setMetadata("location", e.target.value as string)
+              }
+            >
+              <MenuItem
+                style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                value=""
+                disabled
+              >
                 Location
               </MenuItem>
               {LOCATION_OPTIONS.map((location) => (
-                <MenuItem value={location}>{location}</MenuItem>
+                <MenuItem
+                  style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                  value={location}
+                >
+                  {location}
+                </MenuItem>
               ))}
             </Select>
-            <FormHelperText>Required</FormHelperText>
+            <FormHelperText
+              style={{ fontSize: "1vh", margin: "0", padding: "0.3vh" }}
+            >
+              Required
+            </FormHelperText>
           </FormControl>
           <FormControl required style={{ minWidth: 150 }}>
             <InputLabel>Activity</InputLabel>
-            <Select autoWidth value={file.metadata.activity} onChange={e => file.setMetadata('activity', e.target.value as string)}>
-              <MenuItem value="" disabled>
+            <Select
+              autoWidth
+              value={file.metadata.activity}
+              onChange={(e) =>
+                file.setMetadata("activity", e.target.value as string)
+              }
+            >
+              <MenuItem
+                style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                value=""
+                disabled
+              >
                 Activity
               </MenuItem>
               {CAR_ACTIVITIES_OPTIONS.map((activity) => (
-                <MenuItem value={activity}>{activity}</MenuItem>
+                <MenuItem
+                  style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
+                  value={activity}
+                >
+                  {activity}
+                </MenuItem>
               ))}
             </Select>
-            <FormHelperText>Required</FormHelperText>
+            <FormHelperText
+              style={{ fontSize: "1vh", margin: "0", padding: "0.3vh" }}
+            >
+              Required
+            </FormHelperText>
           </FormControl>
-          <TextField label="Test Number" value={file.metadata.testNum} onChange={e => file.setMetadata('testNum', e.target.value as string)}/>
-          <TextField label="Notes" value={file.metadata.notes} onChange={e => file.setMetadata('notes', e.target.value as string)}/>
+          <TextField
+            label="Test Number"
+            value={file.metadata.testNum}
+            onChange={(e) =>
+              file.setMetadata("testNum", e.target.value as string)
+            }
+          />
+          <TextField
+            label="Notes"
+            value={file.metadata.notes}
+            onChange={(e) =>
+              file.setMetadata("notes", e.target.value as string)
+            }
+          />
 
           {file.uploadInfo !== null && (
             <Box width="100%" m={1}>
