@@ -97,6 +97,7 @@ const UploadModal: React.FC = () => {
     setFilenames(
       filenames.map((filename) => {
         filename.metadata[field] = value;
+        console.log(field, "and", value);
         return filename;
       })
     );
@@ -123,6 +124,7 @@ const UploadModal: React.FC = () => {
                 >
                   {CHASSIS_OPTIONS.map((chassis) => (
                     <MenuItem
+                      key={chassis}
                       style={{
                         fontSize: "1.5vh",
                         margin: "0.7vh",
@@ -151,6 +153,7 @@ const UploadModal: React.FC = () => {
                 >
                   {LOCATION_OPTIONS.map((location) => (
                     <MenuItem
+                      key={location}
                       style={{
                         fontSize: "1.5vh",
                         margin: "0.7vh",
@@ -179,6 +182,7 @@ const UploadModal: React.FC = () => {
                 >
                   {CAR_ACTIVITIES_OPTIONS.map((activity) => (
                     <MenuItem
+                      key={activity}
                       style={{
                         fontSize: "1.5vh",
                         margin: "0.7vh",

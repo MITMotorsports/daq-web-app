@@ -48,7 +48,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
             <InputLabel>Chassis</InputLabel>
             <Select
               autoWidth
-              value={file.metadata.chassis}
+              value={file.metadata.chassis ?? ""}
               onChange={(e) =>
                 file.setMetadata("chassis", e.target.value as string)
               }
@@ -62,8 +62,9 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               </MenuItem>
               {CHASSIS_OPTIONS.map((chassis) => (
                 <MenuItem
+                  key={chassis}
                   style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
-                  value={chassis}
+                  value={chassis ?? ""}
                 >
                   {chassis}
                 </MenuItem>
@@ -80,7 +81,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
             <InputLabel>Location</InputLabel>
             <Select
               autoWidth
-              value={file.metadata.location}
+              value={file.metadata.location ?? ""}
               onChange={(e) =>
                 file.setMetadata("location", e.target.value as string)
               }
@@ -94,8 +95,9 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               </MenuItem>
               {LOCATION_OPTIONS.map((location) => (
                 <MenuItem
+                  key={location}
                   style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
-                  value={location}
+                  value={location ?? ""}
                 >
                   {location}
                 </MenuItem>
@@ -111,7 +113,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
             <InputLabel>Activity</InputLabel>
             <Select
               autoWidth
-              value={file.metadata.activity}
+              value={file.metadata.activity ?? ""}
               onChange={(e) =>
                 file.setMetadata("activity", e.target.value as string)
               }
@@ -125,6 +127,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               </MenuItem>
               {CAR_ACTIVITIES_OPTIONS.map((activity) => (
                 <MenuItem
+                  key={activity}
                   style={{ fontSize: "1.5vh", margin: "0", padding: "0.3vh" }}
                   value={activity}
                 >
@@ -140,14 +143,14 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
           </FormControl>
           <TextField
             label="Test Number"
-            value={file.metadata.testNum}
+            value={file.metadata.testNum ?? ""}
             onChange={(e) =>
               file.setMetadata("testNum", e.target.value as string)
             }
           />
           <TextField
             label="Notes"
-            value={file.metadata.notes}
+            value={file.metadata.notes ?? ""}
             onChange={(e) =>
               file.setMetadata("notes", e.target.value as string)
             }
