@@ -7,7 +7,6 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
@@ -88,10 +87,6 @@ const UploadModal: React.FC = () => {
         }
       });
   };
-
-  interface UploadListItemProps {
-    file: FileUploadWatcher;
-  }
 
   const updateMetadataFields = (field: MetadataField, value: string) => {
     setFilenames(
