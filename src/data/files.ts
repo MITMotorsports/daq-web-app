@@ -36,6 +36,14 @@ export type MetadataField =
   | "activity"
   | "testNum"
   | "notes";
+
+export const MetadataFields: string[] = [
+  "chassis",
+  "location",
+  "activity",
+  "testNum",
+  "notes",
+];
 export interface FileMetadata {
   chassis?: string;
   location?: string;

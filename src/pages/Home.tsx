@@ -37,6 +37,8 @@ import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
 
+import { MetadataFields } from "../data/files";
+
 import {
   CHASSIS_OPTIONS,
   LOCATION_OPTIONS,
@@ -64,7 +66,7 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>();
 
   const searchOptions = {
-    keys: ["name"],
+    keys: ["name"].concat(MetadataFields.map((f) => "metadata." + f)),
   };
 
   const fuse = new Fuse(logFiles, searchOptions);
