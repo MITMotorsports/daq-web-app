@@ -37,6 +37,11 @@ import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
 
+import {
+  CHASSIS_OPTIONS,
+  LOCATION_OPTIONS,
+  CAR_ACTIVITIES_OPTIONS,
+} from "../components/UploadListItem";
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
   const [logFiles, setLogFiles] = useState<LogFile[]>([]);
@@ -49,8 +54,13 @@ const Home: React.FC = () => {
 
   const [dateOpened, setDateOpened] = useState<boolean>(false);
   const [dateRange, setDateRange] = React.useState<DateRange>({});
-  const myYearOptions = ["MY18", "MY19", "MY20", "MY21"];
-  const [myYears, setmyYears] = useState<string[]>(myYearOptions);
+
+  const [myYears, setmyYears] = useState<string[]>(CHASSIS_OPTIONS);
+  const [locations, setLocations] = useState<string[]>(LOCATION_OPTIONS);
+  const [activities, setActivities] = useState<string[]>(
+    CAR_ACTIVITIES_OPTIONS
+  );
+
   const [searchText, setSearchText] = useState<string>();
 
   const searchOptions = {
@@ -197,12 +207,71 @@ const Home: React.FC = () => {
               <Select
                 multiple
                 value={myYears}
-                onChange={(e) => { setmyYears(e.target.value as string[]); setFilters("myyears", (l: LogFile) => !!l?.metadata?.chassis && (e.target.value as string[]).includes(l.metadata.chassis)); }}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setmyYears(e.target.value as string[]);
+                  setFilters(
+                    "myyears",
+                    (l: LogFile) =>
+                      !!l?.metadata?.chassis &&
+                      (e.target.value as string[]).includes(l.metadata.chassis)
+                  );
+                }}
                 renderValue={(selected) => (selected as string[]).join(", ")}
               >
-                {myYearOptions.map((x, i) => (
+                {CHASSIS_OPTIONS.map((x, i) => (
                   <MenuItem key={x} value={x}>
                     <Checkbox checked={myYears.indexOf(x) > -1} />
+                    <ListItemText primary={x}></ListItemText>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel>Location</InputLabel>
+              <Select
+                multiple
+                value={locations}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setLocations(e.target.value as string[]);
+                  setFilters(
+                    "locations",
+                    (l: LogFile) =>
+                      !!l?.metadata?.location &&
+                      (e.target.value as string[]).includes(l.metadata.location)
+                  );
+                }}
+                renderValue={(selected) => (selected as string[]).join(", ")}
+              >
+                {LOCATION_OPTIONS.map((x, i) => (
+                  <MenuItem key={x} value={x}>
+                    <Checkbox checked={locations.indexOf(x) > -1} />
+                    <ListItemText primary={x}></ListItemText>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel>Activity</InputLabel>
+              <Select
+                multiple
+                value={activities}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setActivities(e.target.value as string[]);
+                  setFilters(
+                    "activities",
+                    (l: LogFile) =>
+                      !!l?.metadata?.activity &&
+                      (e.target.value as string[]).includes(l.metadata.activity)
+                  );
+                }}
+                renderValue={(selected) => (selected as string[]).join(", ")}
+              >
+                {CAR_ACTIVITIES_OPTIONS.map((x, i) => (
+                  <MenuItem key={x} value={x}>
+                    <Checkbox checked={activities.indexOf(x) > -1} />
                     <ListItemText primary={x}></ListItemText>
                   </MenuItem>
                 ))}
