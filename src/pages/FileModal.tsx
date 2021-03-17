@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import firebase from "firebase/app";
 import axios from "axios";
 import {
   LogFile,
@@ -74,6 +75,8 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
+              Authorization:
+                "Bearer " + (await firebase.auth().currentUser?.getIdToken()),
             },
           }
         );

@@ -107,6 +107,8 @@ export const getPreviewData = async (file: LogFile) => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          Authorization:
+            "Bearer " + (await firebase.auth().currentUser?.getIdToken()),
         },
       }
     );
