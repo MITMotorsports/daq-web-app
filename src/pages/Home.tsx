@@ -197,7 +197,7 @@ const Home: React.FC = () => {
               <Select
                 multiple
                 value={myYears}
-                onChange={(e) => setmyYears(e.target.value as string[])}
+                onChange={(e) => { setmyYears(e.target.value as string[]); setFilters("myyears", (l: LogFile) => !!l?.metadata?.chassis && (e.target.value as string[]).includes(l.metadata.chassis)); }}
                 renderValue={(selected) => (selected as string[]).join(", ")}
               >
                 {myYearOptions.map((x, i) => (
