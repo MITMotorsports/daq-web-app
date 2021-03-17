@@ -30,7 +30,7 @@ const UploadModal: React.FC = () => {
     setFilenames((filenames) => [
       ...filenames,
       ...acceptedFiles.map((file) => {
-        let metadata: FileMetadata = {};
+        let metadata: FileMetadata = {chassis: "MY21", location: "Other", activity: "General"};
         return {
           file: file,
           uploadInfo: null,
