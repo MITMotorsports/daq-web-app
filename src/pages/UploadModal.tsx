@@ -73,6 +73,7 @@ const UploadModal: React.FC = () => {
                 name: file.name,
                 uploaded: firebase.firestore.FieldValue.serverTimestamp(),
                 metadata: fileToUpload.metadata,
+                parse_status: "uploaded",
               })
             )
             .then(
