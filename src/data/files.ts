@@ -50,7 +50,6 @@ export const getFiles = async () => {
   querySnapshot.docs.forEach((docSnapshot) => {
     const messageNames: string[] = docSnapshot.data().columns ?? [];
     const columns: ColumnInfo[] = [];
-    console.log(messageNames);
     for (const messageName of messageNames) {
       for (const [, value] of Object.entries(dataTypes)) {
         if (value.message === messageName) {
