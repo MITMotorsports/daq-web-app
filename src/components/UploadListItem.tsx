@@ -106,9 +106,13 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               file.setMetadata("testNum", e.target.value as string)
             }
           />
+          <br/>
           <TextField
             label="Notes"
             value={file.metadata.notes}
+            multiline
+            fullWidth={true}
+            rows={3}
             onChange={(e) =>
               file.setMetadata("notes", e.target.value as string)
             }
