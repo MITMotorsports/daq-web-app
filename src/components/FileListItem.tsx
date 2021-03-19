@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { LogFile, getDownloadUrlForFile, deleteFile } from "../data/files";
+import { setFavorite } from "../data/user";
 import {
   Button,
   ButtonGroup,
@@ -10,17 +11,22 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 
 interface FileListItemProps {
   file: LogFile;
   onClick: () => void;
   reloadFiles: () => void;
+  isFavorite: boolean;
+  reloadUser: () => void;
 }
 
 const FileListItem: React.FC<FileListItemProps> = ({
   file,
   onClick,
   reloadFiles,
+  isFavorite,
+  reloadUser,
 }) => {
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -57,6 +63,14 @@ const FileListItem: React.FC<FileListItemProps> = ({
             </Button>
           </DialogActions>
         </Dialog>
+        <Button
+          onClick={async () => {
+            await setFavorite(file.id, !isFavorite);
+            reloadUser();
+          }}
+        >
+          {isFavorite ? <Favorite /> : <FavoriteBorder />}
+        </Button>
 
         <ButtonGroup>
           <Button onClick={() => onClick()} variant="contained">
