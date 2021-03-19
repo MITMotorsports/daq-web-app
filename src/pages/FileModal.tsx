@@ -126,9 +126,7 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
           disableCloseOnSelect
           options={frequencyOptions}
           value={selectedFrequencies}
-          onChange={(e, newValue) =>
-            setSelectedFrequencies(newValue)
-          }
+          onChange={(e, newValue) => setSelectedFrequencies(newValue)}
           renderInput={(params) => (
             <TextField {...params} label="Sample Frequency" margin="normal" />
           )}
