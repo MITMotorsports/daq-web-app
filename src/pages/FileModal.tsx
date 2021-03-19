@@ -6,6 +6,7 @@ import {
   FileMetadata,
   setFileMetadata,
   getPathForCachedFile,
+  ColumnInfo,
 } from "../data/files";
 import FilePreview from "../components/FilePreview";
 import {
@@ -33,10 +34,18 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
+  const columnArray = !file || file.columns.length === 0 ? [] : file.columns;
+  const getColumnString = (v: ColumnInfo) =>
+    `${v.message}.${v.field} as ${v.alias}`;
+  const frequencyOptions = ["10", "50", "100", "1000"];
+
   const [downloadUrl, setDownloadUrl] = useState<string | undefined>(undefined);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [columnNames, setColumnNames] = useState<string[]>([]);
+  const [columnNames, setColumnNames] = useState<ColumnInfo[]>(columnArray);
   const [loadingFileLink, setLoadingFileLink] = useState(false);
+  const [selectedFrequencies, setSelectedFrequencies] = useState<string[]>(
+    frequencyOptions
+  );
 
   const [metadata, setMetadata] = useState<FileMetadata | undefined>(
     file?.metadata
@@ -45,16 +54,18 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     file && setMetadata(file.metadata);
   }, [file]);
 
+  useEffect(() => {
+    file && setColumnNames(columnArray);
+  }, [file]); // eslint-disable-line
+
   if (!file) return null;
+
   async function handleRequestFile() {
-    console.log("run request");
     setLoadingFileLink(true);
-    const columns = file!.columns.filter((col) =>
-      columnNames.includes(col.alias)
-    );
-    console.log(columns);
+    const columns = file!.columns.filter((col) => columnNames.includes(col));
 
     const cacheKey = columnNames
+      .map((c) => c.alias)
       .sort()
       .reduce((prev, curr) => `${prev},${curr}`);
 
@@ -77,7 +88,6 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
             },
           }
         );
-        console.log(resp);
         getDownloadUrlForPath(resp.data).then((url) => setDownloadUrl(url));
       } catch (error) {
         console.error(error);
@@ -97,15 +107,14 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
     setCopySuccess(true);
   };
 
-  const frequencyOptions = ["10", "50", "100", "100"];
-
-  const columnArray =
-    file.columns.length === 0
-      ? []
-      : file.columns.map((v) => `${v.message}.${v.field} as ${v.alias}`);
-
   return (
-    <Dialog open={file !== null} onClose={onExited} maxWidth="lg" fullWidth>
+    <Dialog
+      open={file !== null}
+      onClose={onExited}
+      maxWidth="lg"
+      fullWidth
+      key={file.id}
+    >
       <DialogTitle>
         {file && file.name}
         <Typography>{file && file.uploadDate.toLocaleString()}</Typography>
@@ -116,38 +125,44 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
           multiple
           disableCloseOnSelect
           options={frequencyOptions}
+          value={selectedFrequencies}
+          onChange={(e, newValue) =>
+            setSelectedFrequencies(newValue)
+          }
           renderInput={(params) => (
             <TextField {...params} label="Sample Frequency" margin="normal" />
           )}
         />
-
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Autocomplete
-            autoComplete
-            multiple
-            disableCloseOnSelect
-            options={columnArray}
-            defaultValue={columnArray}
-            style={{ width: "50vw", overflowY: "scroll", maxHeight: "115px" }}
-            renderOption={(option, { selected }) => (
-              <React.Fragment>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  checked={selected}
-                />
-                {option}
-              </React.Fragment>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Request File(s)" margin="normal" />
-            )}
-            onChange={(event: any, newValue: string[]) => {
-              setColumnNames(newValue);
-              console.log(columnNames);
-            }}
-          />
-        </div>
+        <Autocomplete
+          autoComplete
+          multiple
+          disableCloseOnSelect
+          options={columnArray}
+          value={columnNames}
+          style={{
+            width: "50vw",
+            overflowY: "auto",
+            overflowX: "hidden",
+            maxHeight: "115px",
+          }}
+          renderOption={(option, { selected }) => (
+            <React.Fragment>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                checked={selected}
+              />
+              {getColumnString(option)}
+            </React.Fragment>
+          )}
+          getOptionLabel={(option) => getColumnString(option)}
+          renderInput={(params) => (
+            <TextField {...params} label="Request File(s)" margin="normal" />
+          )}
+          onChange={(event: any, newValue: ColumnInfo[]) => {
+            setColumnNames(newValue);
+          }}
+        />
 
         {loadingFileLink ? (
           <CircularProgress />
