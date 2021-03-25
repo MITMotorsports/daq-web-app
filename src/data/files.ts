@@ -99,8 +99,8 @@ export const getFiles = async (
           docData.parse_status === "started" ||
           docData.parse_status === "uploaded" ||
           typeof docData.parse_status === "number"
-        )
-          firebase
+        ) {
+          const listener = firebase
             .firestore()
             .collection("files")
             .doc(docSnapshot.id)
@@ -124,6 +124,9 @@ export const getFiles = async (
                     ? await getDownloadUrlForFile(docSnapshot.id, "parsed.npz")
                     : undefined,
               };
+              if (docData.parse_status === "done") {
+                listener(); // Stop checking for updates
+              }
               setter((oldfiles: LogFile[]) => {
                 const idx = oldfiles.findIndex((e) => e.id === newFile.id);
                 let copy = [...oldfiles];
@@ -135,6 +138,7 @@ export const getFiles = async (
                 return copy;
               });
             });
+        }
       }
     })
   );
