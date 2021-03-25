@@ -60,7 +60,9 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                 Chassis
               </MenuItem>
               {CHASSIS_OPTIONS.map((chassis) => (
-                <MenuItem value={chassis}>{chassis}</MenuItem>
+                <MenuItem value={chassis} key={chassis}>
+                  {chassis}
+                </MenuItem>
               ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
@@ -79,7 +81,9 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                 Location
               </MenuItem>
               {LOCATION_OPTIONS.map((location) => (
-                <MenuItem value={location}>{location}</MenuItem>
+                <MenuItem value={location} key={location}>
+                  {location}
+                </MenuItem>
               ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
@@ -97,7 +101,9 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                 Activity
               </MenuItem>
               {CAR_ACTIVITIES_OPTIONS.map((activity) => (
-                <MenuItem value={activity}>{activity}</MenuItem>
+                <MenuItem value={activity} key={activity}>
+                  {activity}
+                </MenuItem>
               ))}
             </Select>
             <FormHelperText>Required</FormHelperText>
