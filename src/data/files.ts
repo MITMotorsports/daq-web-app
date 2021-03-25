@@ -142,6 +142,7 @@ export const getFiles = async (
       }
     })
   );
+  files.sort((b, a) => a.uploadDate.getTime() - b.uploadDate.getTime());
   setter(() => files);
 };
 
