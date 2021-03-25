@@ -19,7 +19,6 @@ import { FileMetadata, LogFile, MetadataField } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
   uploadInfo: firebase.storage.UploadTask | null;
-  setMetadata: (key: string, value: string) => void;
   metadata: FileMetadata;
 }
 
@@ -34,9 +33,6 @@ const UploadModal: React.FC = () => {
         return {
           file: file,
           uploadInfo: null,
-          setMetadata: (k: string, v: string) => {
-            (metadata as any)[k] = v;
-          },
           metadata: metadata,
         };
       }),
@@ -133,7 +129,18 @@ const UploadModal: React.FC = () => {
 
       <List>
         {filenames.map((file, index) => (
-          <UploadListItem file={file} key={index} />
+          <UploadListItem
+            file={file}
+            key={index}
+            setMetadata={(k: MetadataField, v: string) => {
+              setFilenames((prev: FileUploadWatcher[]) => {
+                const copy = [...prev];
+                const idx = copy.indexOf(file);
+                copy[idx].metadata[k] = v;
+                return copy;
+              });
+            }}
+          />
         ))}
       </List>
       <Box style={{ justifyContent: "center" }}>

@@ -6,6 +6,7 @@ import {
   FileMetadata,
   setFileMetadata,
   getPathForCachedFile,
+  MetadataField,
 } from "../data/files";
 import FilePreview from "../components/FilePreview";
 import {
@@ -175,12 +176,12 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
             file={{
               file: file,
               uploadInfo: null,
-              setMetadata: (k: string, v: string) => {
-                let tmp = JSON.parse(JSON.stringify(metadata));
-                (tmp as any)[k] = v;
-                setMetadata(tmp);
-              },
               metadata: metadata,
+            }}
+            setMetadata={(k: MetadataField, v: string) => {
+              let tmp = { ...metadata };
+              tmp[k] = v;
+              setMetadata(tmp);
             }}
           ></UploadListItem>
         ) : null}

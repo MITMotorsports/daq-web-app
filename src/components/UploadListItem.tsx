@@ -14,6 +14,7 @@ import {
   CardContent,
   ListItem,
 } from "@material-ui/core";
+import { MetadataField } from "../data/files";
 
 const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
 const LOCATION_OPTIONS = [
@@ -35,9 +36,13 @@ const CAR_ACTIVITIES_OPTIONS = [
 
 interface UploadListItemProps {
   file: FileUploadWatcher;
+  setMetadata: (k: MetadataField, v: string) => void;
 }
 
-const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
+const UploadListItem: React.FC<UploadListItemProps> = ({
+  file,
+  setMetadata,
+}) => {
   return (
     <ListItem>
       <Card variant="outlined">
@@ -49,9 +54,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
             <Select
               autoWidth
               value={file.metadata.chassis}
-              onChange={(e) =>
-                file.setMetadata("chassis", e.target.value as string)
-              }
+              onChange={(e) => setMetadata("chassis", e.target.value as string)}
             >
               <MenuItem value="" disabled>
                 Chassis
@@ -69,7 +72,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               autoWidth
               value={file.metadata.location}
               onChange={(e) =>
-                file.setMetadata("location", e.target.value as string)
+                setMetadata("location", e.target.value as string)
               }
             >
               <MenuItem value="" disabled>
@@ -87,7 +90,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               autoWidth
               value={file.metadata.activity}
               onChange={(e) =>
-                file.setMetadata("activity", e.target.value as string)
+                setMetadata("activity", e.target.value as string)
               }
             >
               <MenuItem value="" disabled>
@@ -102,16 +105,12 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
           <TextField
             label="Test Number"
             value={file.metadata.testNum}
-            onChange={(e) =>
-              file.setMetadata("testNum", e.target.value as string)
-            }
+            onChange={(e) => setMetadata("testNum", e.target.value as string)}
           />
           <TextField
             label="Notes"
             value={file.metadata.notes}
-            onChange={(e) =>
-              file.setMetadata("notes", e.target.value as string)
-            }
+            onChange={(e) => setMetadata("notes", e.target.value as string)}
           />
 
           {file.uploadInfo !== null && (
