@@ -37,13 +37,15 @@ export type MetadataField =
   | "location"
   | "activity"
   | "testNum"
-  | "notes";
+  | "notes"
+  | "hyperlink";
 export interface FileMetadata {
   chassis?: string;
   location?: string;
   activity?: string;
   testNum?: string;
   notes?: string;
+  hyperlink?: string;
 }
 
 export const getFiles = async (

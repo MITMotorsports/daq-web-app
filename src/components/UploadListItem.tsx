@@ -113,6 +113,25 @@ const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
               file.setMetadata("notes", e.target.value as string)
             }
           />
+          {file.metadata.hyperlink ? (
+            <a href={"https://" + file.metadata.hyperlink}>
+              <TextField
+                label="hyperlink"
+                value={file.metadata.hyperlink}
+                onChange={(e) =>
+                  file.setMetadata("hyperlink", e.target.value as string)
+                }
+              />
+            </a>
+          ) : (
+            <TextField
+              label="hyperlink"
+              value={file.metadata.hyperlink}
+              onChange={(e) =>
+                file.setMetadata("hyperlink", e.target.value as string)
+              }
+            />
+          )}
 
           {file.uploadInfo !== null && (
             <Box width="100%" m={1}>
