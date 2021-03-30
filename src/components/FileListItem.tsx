@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogFile, getDownloadUrlForFile, deleteFile } from "../data/files";
+import { LogFile, deleteFile } from "../data/files";
 import { setFavorite } from "../data/user";
 import {
   Box,
