@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
 import fullWhite from "../images/fullWhite.png";
@@ -67,18 +67,23 @@ const Home: React.FC = () => {
     reloadFiles();
   };
 
-  const reloadFiles = async () => {
-    const fls = await getFiles();
-    setLogFiles(fls);
-
-    const newOpenedState = new Array(fls.length).fill(false);
+  useEffect(() => {
+    const newOpenedState = new Array(logFiles.length).fill(false);
     // Preserve state of previous groups
-    if (opened) {
-      for (let i = 0; i < Math.min(opened.length, newOpenedState.length); i++) {
-        newOpenedState[i] = opened[i];
+    const prevOpened = opened;
+    if (prevOpened) {
+      for (
+        let i = 0;
+        i < Math.min(prevOpened.length, newOpenedState.length);
+        i++
+      ) {
+        newOpenedState[i] = prevOpened[i];
       }
     }
     setOpened(newOpenedState);
+  }, [logFiles]); // eslint-disable-line
+  const reloadFiles = async () => {
+    getFiles(setLogFiles);
   };
 
   window.addEventListener("load", reloadFiles);
