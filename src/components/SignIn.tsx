@@ -60,7 +60,6 @@ const SignIn = () => {
       // to attach a callback that is triggered when a response is returned.
       .then((resp) => {
         console.log(`Signed in as ${resp.user?.email}`);
-        window.location.reload();
         // If we get here, the login was successful.
         // Push to history to redirect to the Home page.
         history.push("/");

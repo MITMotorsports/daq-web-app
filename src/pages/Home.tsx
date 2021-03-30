@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
 import fullWhite from "../images/fullWhite.png";
@@ -36,6 +36,7 @@ import FileModal from "./FileModal";
 import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
+import firebase from "firebase";
 
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
@@ -81,7 +82,10 @@ const Home: React.FC = () => {
     setOpened(newOpenedState);
   };
 
-  window.addEventListener("load", reloadFiles);
+  // TODO @rhuffy fix this!
+  useEffect(() => {
+    reloadFiles();
+  }, []); // eslint-disable-line
 
   makeStyles((theme) => ({
     root: {
@@ -114,6 +118,14 @@ const Home: React.FC = () => {
                 alt="MIT Motorsports"
                 style={{ height: "4.7vh" }}
               />
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => firebase.auth().signOut()}
+              >
+                Log Out
+              </Button>
             </Grid>
             <Grid item>
               <Button
