@@ -37,6 +37,7 @@ import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
 import firebase from "firebase";
+import { useHistory } from "react-router";
 
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
@@ -53,6 +54,8 @@ const Home: React.FC = () => {
   const myYearOptions = ["MY18", "MY19", "MY20", "MY21"];
   const [myYears, setmyYears] = useState<string[]>(myYearOptions);
   const [searchText, setSearchText] = useState<string>();
+
+  const history = useHistory();
 
   const searchOptions = {
     keys: ["name"],
@@ -122,7 +125,12 @@ const Home: React.FC = () => {
             <Grid item>
               <Button
                 variant="contained"
-                onClick={() => firebase.auth().signOut()}
+                onClick={() => {
+                  firebase
+                    .auth()
+                    .signOut()
+                    .then(() => history.push("/"));
+                }}
               >
                 Log Out
               </Button>
