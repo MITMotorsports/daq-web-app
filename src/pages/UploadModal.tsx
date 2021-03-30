@@ -48,7 +48,7 @@ const UploadModal: React.FC = () => {
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: ".TSV, .tsv, .npz, .NPZ",
+    accept: ".TSV, .tsv, .npz, .NPZ, .fsae",
   });
 
   const handleUpload = () => {
@@ -56,24 +56,38 @@ const UploadModal: React.FC = () => {
       .filter((file) => file.uploadInfo === null)
       .forEach((fileToUpload: FileUploadWatcher) => {
         const { file } = fileToUpload;
-
         if (file instanceof File && file.size < 100000000) {
+          const ext = file.name.split(".").pop()?.toLowerCase();
+          const isParsed = ext === "npz";
           const firestoreRef = firebase.firestore().collection("files").doc();
           const storageRef = firebase
             .storage()
-            .ref(`prototype/${firestoreRef.id}/raw`);
+            .ref(
+              `prototype/${firestoreRef.id}/` +
+                (isParsed ? "parsed.npz" : "raw." + ext)
+            );
 
           // Begin upload
           const uploadInfo = storageRef.put(file);
 
           // Upload metadata when file is done uploading
-          uploadInfo.then(() =>
-            firestoreRef.set({
-              name: file.name,
-              uploaded: firebase.firestore.FieldValue.serverTimestamp(),
-              metadata: fileToUpload.metadata,
-            })
-          );
+          uploadInfo
+            .then(() =>
+              firestoreRef.set({
+                name: file.name,
+                uploaded: firebase.firestore.FieldValue.serverTimestamp(),
+                metadata: fileToUpload.metadata,
+                parse_status: "uploaded",
+              })
+            )
+            .then(
+              () =>
+                isParsed &&
+                storageRef.updateMetadata({
+                  contentDisposition:
+                    'attachment; filename="' + file.name + '"',
+                })
+            );
 
           fileToUpload.uploadInfo = uploadInfo;
           forceUpdate();
@@ -115,7 +129,7 @@ const UploadModal: React.FC = () => {
               <Typography>
                 Drag 'n' drop some files here, or click to select files
               </Typography>
-              <Typography>(only TSV and NPZ files allowed)</Typography>
+              <Typography>(only TSV, NPZ, FSAE files allowed)</Typography>
             </div>
           )}
         </CardContent>
