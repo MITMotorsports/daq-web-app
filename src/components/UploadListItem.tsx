@@ -15,8 +15,8 @@ import {
   ListItem,
 } from "@material-ui/core";
 
-const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
-const LOCATION_OPTIONS = [
+export const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
+export const LOCATION_OPTIONS = [
   "Palmer",
   "Alley",
   "Lot",
@@ -24,7 +24,7 @@ const LOCATION_OPTIONS = [
   "Competition",
   "Other",
 ];
-const CAR_ACTIVITIES_OPTIONS = [
+export const CAR_ACTIVITIES_OPTIONS = [
   "Endurance",
   "Acceleration",
   "Skidpad",
