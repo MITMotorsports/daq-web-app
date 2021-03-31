@@ -24,6 +24,7 @@ export interface LogFile {
   id: string;
   name: string;
   columns: ColumnInfo[];
+  columnsString?: string;
   uploadDate: Date;
   deleted: boolean | undefined;
   metadata: FileMetadata;
@@ -91,6 +92,9 @@ export const getFiles = async (
           id: docSnapshot.id,
           name: docData.name,
           columns: columns,
+          columnsString: columns
+            .map((c) => `${c.alias} ${c.field}.${c.message}`)
+            .reduce((a, b) => `${a} ${b}`, ""),
           uploadDate: (docData!
             .uploaded as firebase.firestore.Timestamp).toDate(),
           metadata: docData.metadata,

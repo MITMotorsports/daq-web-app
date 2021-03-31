@@ -66,7 +66,11 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>();
 
   const searchOptions = {
-    keys: ["name"].concat(MetadataFields.map((f) => "metadata." + f)),
+    keys: ["name", "columnsString"].concat(
+      MetadataFields.map((f) => "metadata." + f)
+    ),
+    findAllMatches: true,
+    ignoreLocation: true,
   };
 
   const fuse = new Fuse(logFiles, searchOptions);
