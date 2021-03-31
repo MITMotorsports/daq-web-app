@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import GPSMap from "../components/GPSMap";
+import CustomPlots from "../components/CustomPlots";
 import PreviewPlot from "../components/PreviewPlot";
 import { LogFile, FilePreviewData, getPreviewData } from "../data/files";
 import {
@@ -96,6 +97,8 @@ const FilePreview: React.FC<Props> = ({ file }) => {
               })()}
           </Grid>
         </Grid>
+
+        <CustomPlots data={data}></CustomPlots>
       </div>
     );
 
