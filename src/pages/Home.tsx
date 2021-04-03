@@ -122,27 +122,30 @@ const Home: React.FC = () => {
                 style={{ height: "4.7vh" }}
               />
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  firebase
-                    .auth()
-                    .signOut()
-                    .then(() => history.push("/"));
-                }}
-              >
-                Log Out
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={() => setShowUploadModal(true)}
-              >
-                Upload
-              </Button>
-            </Grid>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Grid item>
+                <Button
+                  style={{ marginRight: "0.5vh" }}
+                  variant="contained"
+                  onClick={() => {
+                    firebase
+                      .auth()
+                      .signOut()
+                      .then(() => history.push("/"));
+                  }}
+                >
+                  Log Out
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={() => setShowUploadModal(true)}
+                >
+                  Upload
+                </Button>
+              </Grid>
+            </div>
           </Grid>
         </Toolbar>
       </AppBar>
