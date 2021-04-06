@@ -36,6 +36,8 @@ import FileModal from "./FileModal";
 import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
+import firebase from "firebase";
+import { useHistory } from "react-router";
 
 import { MetadataFields } from "../data/files";
 
@@ -64,6 +66,8 @@ const Home: React.FC = () => {
   );
 
   const [searchText, setSearchText] = useState<string>();
+
+  const history = useHistory();
 
   const searchOptions = {
     keys: ["name"].concat(MetadataFields.map((f) => "metadata." + f)),
@@ -98,7 +102,10 @@ const Home: React.FC = () => {
     getFiles(setLogFiles);
   };
 
-  window.addEventListener("load", reloadFiles);
+  // TODO @rhuffy fix this!
+  useEffect(() => {
+    reloadFiles();
+  }, []); // eslint-disable-line
 
   makeStyles((theme) => ({
     root: {
@@ -132,14 +139,30 @@ const Home: React.FC = () => {
                 style={{ height: "4.7vh" }}
               />
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={() => setShowUploadModal(true)}
-              >
-                Upload
-              </Button>
-            </Grid>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Grid item>
+                <Button
+                  style={{ marginRight: "0.5vh" }}
+                  variant="contained"
+                  onClick={() => {
+                    firebase
+                      .auth()
+                      .signOut()
+                      .then(() => history.push("/"));
+                  }}
+                >
+                  Log Out
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={() => setShowUploadModal(true)}
+                >
+                  Upload
+                </Button>
+              </Grid>
+            </div>
           </Grid>
         </Toolbar>
       </AppBar>
