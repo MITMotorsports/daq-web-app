@@ -15,18 +15,20 @@ const App: React.FC = () => (
   <Router>
     <Switch>
       <Route path="/signin" component={SignIn} />
-      <Route path="/home" component={Home} exact={true} />
       <Route
+        path="/home"
         exact
-        path="/"
         render={() =>
           firebase.auth().currentUser !== null ? (
-            <Redirect to="/home" />
+            <Home />
           ) : (
             <Redirect to="/signin" />
           )
         }
       />
+      <Route path="/">
+        <Redirect to="/home" />
+      </Route>
     </Switch>
   </Router>
 );
