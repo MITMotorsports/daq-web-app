@@ -1,7 +1,15 @@
-import React, { useState, useCallback, useReducer } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useReducer } from "react";
+import Dropzone from "react-dropzone";
 
 import Backup from "@material-ui/icons/Backup";
+
+import MasterChassis, {
+  DEFAULT_ACTIVITY,
+  DEFAULT_CHASSIS,
+  DEFAULT_LOCATION,
+} from "../components/MasterChassis";
+import MasterActivity from "../components/MasterActivity";
+import MasterLocation from "../components/MasterLocation";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -11,11 +19,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import UploadListItem from "../components/UploadListItem";
-import {
-  CHASSIS_OPTIONS,
-  LOCATION_OPTIONS,
-  CAR_ACTIVITIES_OPTIONS,
-} from "../components/UploadListItem";
+
 import {
   Card,
   CardContent,
@@ -33,29 +37,28 @@ export interface FileUploadWatcher {
   metadata: FileMetadata;
 }
 
-const UploadModal: React.FC = () => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [filenames, setFilenames] = useState([] as FileUploadWatcher[]);
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFilenames((filenames) => [
-      ...filenames,
-      ...acceptedFiles.map((file) => {
-        let metadata: FileMetadata = {};
-        return {
-          file: file,
-          uploadInfo: null,
-          setMetadata: (k: string, v: string) => {
-            (metadata as any)[k] = v;
-          },
-          metadata: metadata,
-        };
-      }),
-    ]);
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+interface Props {}
 
-  const handleUpload = () => {
-    filenames
+interface State {
+  filenames: FileUploadWatcher[];
+  masterChassis: string;
+  masterLocation: string;
+  masterActivity: string;
+}
+
+class UploadModal extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      masterChassis: DEFAULT_CHASSIS,
+      masterLocation: DEFAULT_LOCATION,
+      masterActivity: DEFAULT_ACTIVITY,
+      filenames: [],
+    };
+  }
+
+  handleUpload = () => {
+    this.state.filenames
       .filter((file) => file.uploadInfo === null)
       .forEach((fileToUpload: FileUploadWatcher) => {
         const { file } = fileToUpload;
@@ -79,7 +82,7 @@ const UploadModal: React.FC = () => {
           );
 
           fileToUpload.uploadInfo = uploadInfo;
-          forceUpdate();
+          useReducer((x) => x + 1, 0);
         } else {
           console.error(
             `file ${file.name} was too large. Do not upload files larger than 100MB`
@@ -88,137 +91,80 @@ const UploadModal: React.FC = () => {
       });
   };
 
-  const updateMetadataFields = (field: MetadataField, value: string) => {
-    setFilenames(
-      filenames.map((filename) => {
-        filename.metadata[field] = value;
-        console.log(field, "and", value);
-        return filename;
-      })
+  render() {
+    return (
+      <>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <MasterChassis
+              onChange={(newChassis: string) => {
+                this.setState({ masterChassis: newChassis });
+              }}
+            />
+            <MasterActivity
+              onChange={(newActivity: string) => {
+                this.setState({ masterActivity: newActivity });
+              }}
+            />
+            <MasterLocation
+              onChange={(newLocation: string) => {
+                this.setState({ masterLocation: newLocation });
+              }}
+            />
+          </div>
+
+          <Dropzone
+            onDrop={(acceptedFiles: File[]) => {
+              this.setState({
+                filenames: [
+                  ...this.state.filenames,
+                  ...acceptedFiles.map((file) => {
+                    let metadata: FileMetadata = {
+                      chassis: "MY21",
+                      location: "Other",
+                      activity: "General",
+                    };
+                    return {
+                      file: file,
+                      uploadInfo: null,
+                      setMetadata: (k: string, v: string) => {
+                        (metadata as any)[k] = v;
+                      },
+                      metadata: metadata,
+                    };
+                  }),
+                ],
+              });
+            }}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+
+          <List>
+            {this.state.filenames.map((file, index) => (
+              <UploadListItem file={file} key={index} />
+            ))}
+            {console.log(this.state.filenames.length)}
+          </List>
+          <Box style={{ justifyContent: "center" }}>
+            <Button onClick={this.handleUpload}>Upload</Button>
+          </Box>
+        </div>
+      </>
     );
-  };
-
-  return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <ListItem style={{ margin: "0", padding: "0" }}>
-          <Card style={{ margin: "0", padding: "0" }}>
-            <CardContent style={{ margin: "0", padding: "0.5vh" }}>
-              <FormControl required style={{ minWidth: 90 }}>
-                <InputLabel>Chassis</InputLabel>
-                <Select
-                  autoWidth
-                  onChange={(e) =>
-                    updateMetadataFields("chassis", e.target.value as string)
-                  }
-                >
-                  {CHASSIS_OPTIONS.map((chassis) => (
-                    <MenuItem
-                      key={chassis}
-                      style={{
-                        fontSize: "1.5vh",
-                        margin: "0.7vh",
-                        padding: "0.3vh",
-                      }}
-                      value={chassis}
-                    >
-                      {chassis}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </CardContent>
-          </Card>
-        </ListItem>
-        <ListItem style={{ margin: "0", padding: "0" }}>
-          <Card style={{ margin: "0", padding: "0" }}>
-            <CardContent style={{ margin: "0", padding: "0.5vh" }}>
-              <FormControl required style={{ minWidth: 90 }}>
-                <InputLabel>Location</InputLabel>
-                <Select
-                  autoWidth
-                  onChange={(e) =>
-                    updateMetadataFields("location", e.target.value as string)
-                  }
-                >
-                  {LOCATION_OPTIONS.map((location) => (
-                    <MenuItem
-                      key={location}
-                      style={{
-                        fontSize: "1.5vh",
-                        margin: "0.7vh",
-                        padding: "0.3vh",
-                      }}
-                      value={location}
-                    >
-                      {location}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </CardContent>
-          </Card>
-        </ListItem>
-        <ListItem style={{ margin: "0", padding: "0" }}>
-          <Card style={{ margin: "0", padding: "0" }}>
-            <CardContent style={{ margin: "0", padding: "0.5vh" }}>
-              <FormControl required style={{ minWidth: 90 }}>
-                <InputLabel>Activity</InputLabel>
-                <Select
-                  autoWidth
-                  onChange={(e) =>
-                    updateMetadataFields("activity", e.target.value as string)
-                  }
-                >
-                  {CAR_ACTIVITIES_OPTIONS.map((activity) => (
-                    <MenuItem
-                      key={activity}
-                      style={{
-                        fontSize: "1.5vh",
-                        margin: "0.7vh",
-                        padding: "0.3vh",
-                      }}
-                      value={activity}
-                    >
-                      {activity}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </CardContent>
-          </Card>
-        </ListItem>
-      </div>
-      <Card {...getRootProps()}>
-        <CardContent>
-          <Backup />
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <Typography>Drop the files here ...</Typography>
-          ) : (
-            <Typography>
-              Drag 'n' drop some files here, or click to select files
-            </Typography>
-          )}
-        </CardContent>
-      </Card>
-
-      <List>
-        {filenames.map((file, index) => (
-          <UploadListItem file={file} key={index} />
-        ))}
-        {console.log(filenames.length)}
-      </List>
-      <Box style={{ justifyContent: "center" }}>
-        <Button onClick={handleUpload}>Upload</Button>
-      </Box>
-    </div>
-  );
-};
+  }
+}
 
 export default UploadModal;
