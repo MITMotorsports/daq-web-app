@@ -3,6 +3,14 @@ import "firebase/firestore";
 import L from "leaflet";
 import axios from "axios";
 
+export const MetadataFields: string[] = [
+  "chassis",
+  "location",
+  "activity",
+  "testNum",
+  "notes",
+];
+
 const dataTypes: {
   [key: string]: {
     message: string;
