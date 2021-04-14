@@ -10,7 +10,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 
-import { List, Button, Box, InputLabel } from "@material-ui/core";
+import { List, Button, Box, InputLabel, Typography } from "@material-ui/core";
 import { FileMetadata, LogFile } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
@@ -137,7 +137,19 @@ class UploadModal extends React.Component<Props, State> {
               <section>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <p>Drag 'n' drop some files here, or click to select files</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      color: "grey",
+                    }}
+                  >
+                    <Typography>
+                      Drag 'n' drop some files here, or click to select files
+                    </Typography>
+                    <Typography>(only TSV, NPZ, FSAE files allowed)</Typography>
+                  </div>
                 </div>
               </section>
             )}
