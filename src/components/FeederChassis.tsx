@@ -34,9 +34,9 @@ class FeederChassis extends React.Component<Props, State> {
           this.setState({ myChassis: evt.target.value as string });
         }}
       >
-        {CHASSIS_OPTIONS.map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
+        {CHASSIS_OPTIONS.map((chassis) => (
+          <MenuItem key={chassis} value={chassis}>
+            {chassis}
           </MenuItem>
         ))}
       </Select>
