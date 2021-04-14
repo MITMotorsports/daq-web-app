@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Select, MenuItem } from "@material-ui/core";
-import { CAR_ACTIVITIES_OPTIONS, DEFAULT_ACTIVITY } from "./MasterChassis";
+import { CAR_ACTIVITIES_OPTIONS, DEFAULT_ACTIVITY } from "./MasterActivity";
 
 interface Props {
   masterActivity: string;
@@ -20,7 +20,7 @@ class FeederActivity extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.masterActivity != this.props.masterActivity) {
+    if (prevProps.masterActivity !== this.props.masterActivity) {
       this.setState({ myActivity: this.props.masterActivity });
     }
   }

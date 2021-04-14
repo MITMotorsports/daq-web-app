@@ -1,19 +1,16 @@
 import React from "react";
+import { Select, MenuItem } from "@material-ui/core";
 
-import {
-  DEFAULT_LOCATION,
-  LOCATION_OPTIONS,
-} from "../components/MasterChassis";
+export const DEFAULT_LOCATION = "Palmer";
 
-import {
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  TextField,
-} from "@material-ui/core";
-import { FileUploadWatcher } from "../pages/UploadModal";
+export const LOCATION_OPTIONS = [
+  "Palmer",
+  "Alley",
+  "Lot",
+  "Jackstands",
+  "Competition",
+  "Other",
+];
 
 interface Props {
   onChange: (newLocation: string) => void;
@@ -25,6 +22,7 @@ class MasterLocation extends React.Component<Props, State> {
   render() {
     return (
       <Select
+        label="Location"
         defaultValue={DEFAULT_LOCATION}
         onChange={(evt) => {
           const newLocation = evt.target.value as string;

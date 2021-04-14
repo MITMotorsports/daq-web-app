@@ -1,18 +1,16 @@
 import React from "react";
 
-import {
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  TextField,
-} from "@material-ui/core";
-import { FileUploadWatcher } from "../pages/UploadModal";
-import {
-  DEFAULT_ACTIVITY,
-  CAR_ACTIVITIES_OPTIONS,
-} from "../components/MasterChassis";
+import { Select, MenuItem } from "@material-ui/core";
+
+export const DEFAULT_ACTIVITY = "Endurance";
+export const CAR_ACTIVITIES_OPTIONS = [
+  "Endurance",
+  "Acceleration",
+  "Skidpad",
+  "Shakedown",
+  "Stationary Debugging",
+  "General",
+];
 
 interface Props {
   onChange: (newActivity: string) => void;
@@ -24,6 +22,7 @@ class MasterActivity extends React.Component<Props, State> {
   render() {
     return (
       <Select
+        label="Activity"
         defaultValue={DEFAULT_ACTIVITY}
         onChange={(evt) => {
           const newActivity = evt.target.value as string;

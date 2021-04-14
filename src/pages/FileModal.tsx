@@ -145,6 +145,9 @@ const FileModal: React.FC<FileModalProps> = ({ file, onExited }) => {
         <FilePreview file={file}></FilePreview>
         {metadata ? (
           <UploadListItem
+            masterChassis=""
+            masterActivity=""
+            masterLocation=""
             file={{
               file: file,
               uploadInfo: null,

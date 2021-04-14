@@ -1,7 +1,11 @@
 import React from "react";
 
 import { Select, MenuItem } from "@material-ui/core";
-import { LOCATION_OPTIONS, DEFAULT_LOCATION } from "./MasterChassis";
+
+import {
+  DEFAULT_LOCATION,
+  LOCATION_OPTIONS,
+} from "../components/MasterLocation";
 
 interface Props {
   masterLocation: string;
@@ -20,7 +24,7 @@ class FeederLocation extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.masterLocation != this.props.masterLocation) {
+    if (prevProps.masterLocation !== this.props.masterLocation) {
       this.setState({ myLocation: this.props.masterLocation });
     }
   }
@@ -28,6 +32,7 @@ class FeederLocation extends React.Component<Props, State> {
   render() {
     return (
       <Select
+        label="Location"
         value={this.state.myLocation}
         onChange={(evt) => {
           this.setState({ myLocation: evt.target.value as string });

@@ -1,35 +1,17 @@
 import React, { useReducer } from "react";
 import Dropzone from "react-dropzone";
+import UploadListItem from "../components/UploadListItem";
 
-import Backup from "@material-ui/icons/Backup";
+import MasterChassis, { DEFAULT_CHASSIS } from "../components/MasterChassis";
+import MasterActivity, { DEFAULT_ACTIVITY } from "../components/MasterActivity";
+import MasterLocation, { DEFAULT_LOCATION } from "../components/MasterLocation";
 
-import MasterChassis, {
-  DEFAULT_ACTIVITY,
-  DEFAULT_CHASSIS,
-  DEFAULT_LOCATION,
-} from "../components/MasterChassis";
-import MasterActivity from "../components/MasterActivity";
-import MasterLocation from "../components/MasterLocation";
-
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
-import UploadListItem from "../components/UploadListItem";
 
-import {
-  Card,
-  CardContent,
-  List,
-  Button,
-  Box,
-  Typography,
-  ListItem,
-} from "@material-ui/core";
-import { FileMetadata, LogFile, MetadataField } from "../data/files";
+import { List, Button, Box, InputLabel } from "@material-ui/core";
+import { FileMetadata, LogFile } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
   uploadInfo: firebase.storage.UploadTask | null;
@@ -101,21 +83,30 @@ class UploadModal extends React.Component<Props, State> {
               flexDirection: "row",
             }}
           >
-            <MasterChassis
-              onChange={(newChassis: string) => {
-                this.setState({ masterChassis: newChassis });
-              }}
-            />
-            <MasterActivity
-              onChange={(newActivity: string) => {
-                this.setState({ masterActivity: newActivity });
-              }}
-            />
-            <MasterLocation
-              onChange={(newLocation: string) => {
-                this.setState({ masterLocation: newLocation });
-              }}
-            />
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Chassis</InputLabel>
+              <MasterChassis
+                onChange={(newChassis: string) => {
+                  this.setState({ masterChassis: newChassis });
+                }}
+              />
+            </div>
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Activity</InputLabel>
+              <MasterActivity
+                onChange={(newActivity: string) => {
+                  this.setState({ masterActivity: newActivity });
+                }}
+              />
+            </div>
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Location</InputLabel>
+              <MasterLocation
+                onChange={(newLocation: string) => {
+                  this.setState({ masterLocation: newLocation });
+                }}
+              />
+            </div>
           </div>
 
           <Dropzone
@@ -154,7 +145,13 @@ class UploadModal extends React.Component<Props, State> {
 
           <List>
             {this.state.filenames.map((file, index) => (
-              <UploadListItem file={file} key={index} />
+              <UploadListItem
+                key={index}
+                file={file}
+                masterChassis={this.state.masterChassis}
+                masterActivity={this.state.masterActivity}
+                masterLocation={this.state.masterLocation}
+              />
             ))}
             {console.log(this.state.filenames.length)}
           </List>
