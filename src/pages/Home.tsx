@@ -179,7 +179,6 @@ const Home: React.FC = () => {
             value={fileTypeSelection}
           >
             <Tab label="Logs" value="logs" tabIndex={0}></Tab>
-            <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
           </Tabs>
           <a
             href="https://github.com/MITMotorsports/daq-web-app/issues/new"
