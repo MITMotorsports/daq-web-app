@@ -1,21 +1,17 @@
-import React, { useState, useCallback, useReducer } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useReducer } from "react";
+import Dropzone from "react-dropzone";
+import UploadListItem from "../components/UploadListItem";
 
-import Backup from "@material-ui/icons/Backup";
+import MasterChassis, { DEFAULT_CHASSIS } from "../components/MasterChassis";
+import MasterActivity, { DEFAULT_ACTIVITY } from "../components/MasterActivity";
+import MasterLocation, { DEFAULT_LOCATION } from "../components/MasterLocation";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
-import UploadListItem from "../components/UploadListItem";
-import {
-  Card,
-  CardContent,
-  List,
-  Button,
-  Box,
-  Typography,
-} from "@material-ui/core";
-import { FileMetadata, LogFile, MetadataField } from "../data/files";
+
+import { List, Button, Box, InputLabel, Typography } from "@material-ui/core";
+import { FileMetadata, LogFile } from "../data/files";
 export interface FileUploadWatcher {
   file: File | LogFile;
   uploadInfo: firebase.storage.UploadTask | null;
@@ -23,36 +19,28 @@ export interface FileUploadWatcher {
   metadata: FileMetadata;
 }
 
-const UploadModal: React.FC = () => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [filenames, setFilenames] = useState([] as FileUploadWatcher[]);
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFilenames((filenames) => [
-      ...filenames,
-      ...acceptedFiles.map((file) => {
-        let metadata: FileMetadata = {
-          chassis: "MY21",
-          location: "Other",
-          activity: "General",
-        };
-        return {
-          file: file,
-          uploadInfo: null,
-          setMetadata: (k: string, v: string) => {
-            (metadata as any)[k] = v;
-          },
-          metadata: metadata,
-        };
-      }),
-    ]);
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: ".TSV, .tsv, .npz, .NPZ, .fsae",
-  });
+interface Props {}
 
-  const handleUpload = () => {
-    filenames
+interface State {
+  filenames: FileUploadWatcher[];
+  masterChassis: string;
+  masterLocation: string;
+  masterActivity: string;
+}
+
+class UploadModal extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      masterChassis: DEFAULT_CHASSIS,
+      masterLocation: DEFAULT_LOCATION,
+      masterActivity: DEFAULT_ACTIVITY,
+      filenames: [],
+    };
+  }
+
+  handleUpload = () => {
+    this.state.filenames
       .filter((file) => file.uploadInfo === null)
       .forEach((fileToUpload: FileUploadWatcher) => {
         const { file } = fileToUpload;
@@ -90,7 +78,7 @@ const UploadModal: React.FC = () => {
             );
 
           fileToUpload.uploadInfo = uploadInfo;
-          forceUpdate();
+          useReducer((x) => x + 1, 0);
         } else {
           console.error(
             `file ${file.name} was too large. Do not upload files larger than 100MB`
@@ -99,52 +87,107 @@ const UploadModal: React.FC = () => {
       });
   };
 
-  // eslint-disable-next-line
-  const updateMetadataFields = (field: MetadataField, value: string) => {
-    setFilenames(
-      filenames.map((filename) => {
-        filename.metadata[field] = value;
-        return filename;
-      })
-    );
-  };
-
-  return (
-    <div>
-      <Card {...getRootProps()}>
-        <CardContent>
-          <Backup />
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <Typography>Drop the files here ...</Typography>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                color: "grey",
-              }}
-            >
-              <Typography>
-                Drag 'n' drop some files here, or click to select files
-              </Typography>
-              <Typography>(only TSV, NPZ, FSAE files allowed)</Typography>
+  render() {
+    return (
+      <>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Chassis</InputLabel>
+              <MasterChassis
+                onChange={(newChassis: string) => {
+                  this.setState({ masterChassis: newChassis });
+                }}
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Activity</InputLabel>
+              <MasterActivity
+                onChange={(newActivity: string) => {
+                  this.setState({ masterActivity: newActivity });
+                }}
+              />
+            </div>
+            <div>
+              <InputLabel style={{ fontSize: "1.2vh" }}>Location</InputLabel>
+              <MasterLocation
+                onChange={(newLocation: string) => {
+                  this.setState({ masterLocation: newLocation });
+                }}
+              />
+            </div>
+          </div>
 
-      <List>
-        {filenames.map((file, index) => (
-          <UploadListItem file={file} key={index} />
-        ))}
-      </List>
-      <Box style={{ justifyContent: "center" }}>
-        <Button onClick={handleUpload}>Upload</Button>
-      </Box>
-    </div>
-  );
-};
+          <Dropzone
+            onDrop={(acceptedFiles: File[]) => {
+              this.setState({
+                filenames: [
+                  ...this.state.filenames,
+                  ...acceptedFiles.map((file) => {
+                    let metadata: FileMetadata = {
+                      chassis: "MY21",
+                      location: "Other",
+                      activity: "General",
+                    };
+                    return {
+                      file: file,
+                      uploadInfo: null,
+                      setMetadata: (k: string, v: string) => {
+                        (metadata as any)[k] = v;
+                      },
+                      metadata: metadata,
+                    };
+                  }),
+                ],
+              });
+            }}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      color: "grey",
+                    }}
+                  >
+                    <Typography>
+                      Drag 'n' drop some files here, or click to select files
+                    </Typography>
+                    <Typography>(only TSV, NPZ, FSAE files allowed)</Typography>
+                  </div>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+
+          <List>
+            {this.state.filenames.map((file, index) => (
+              <UploadListItem
+                key={index}
+                file={file}
+                masterChassis={this.state.masterChassis}
+                masterActivity={this.state.masterActivity}
+                masterLocation={this.state.masterLocation}
+              />
+            ))}
+            {console.log(this.state.filenames.length)}
+          </List>
+          <Box style={{ justifyContent: "center" }}>
+            <Button onClick={this.handleUpload}>Upload</Button>
+          </Box>
+        </div>
+      </>
+    );
+  }
+}
 
 export default UploadModal;

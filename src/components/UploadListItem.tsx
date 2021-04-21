@@ -1,11 +1,15 @@
 import React from "react";
 import StorageProgressBar from "./StorageProgressBar";
 import { FileUploadWatcher } from "../pages/UploadModal";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
+
+import FeederChassis from "./FeederChassis";
+import FeederActivity from "./FeederActivity";
+import FeederLocation from "./FeederLocation";
+
+import { DEFAULT_CHASSIS } from "../components/MasterChassis";
+import { DEFAULT_ACTIVITY } from "../components/MasterActivity";
+import { DEFAULT_LOCATION } from "../components/MasterLocation";
+
 import TextField from "@material-ui/core/TextField";
 import {
   Typography,
@@ -13,6 +17,7 @@ import {
   Card,
   CardContent,
   ListItem,
+  InputLabel,
 } from "@material-ui/core";
 
 export const CHASSIS_OPTIONS = ["MY18", "MY19", "MY20", "MY21"];
@@ -33,100 +38,90 @@ export const CAR_ACTIVITIES_OPTIONS = [
   "General",
 ];
 
-interface UploadListItemProps {
+interface Props {
   file: FileUploadWatcher;
+  masterChassis: string;
+  masterActivity: string;
+  masterLocation: string;
 }
 
-const UploadListItem: React.FC<UploadListItemProps> = ({ file }) => {
-  return (
-    <ListItem>
-      <Card variant="outlined">
-        <CardContent>
-          <Typography>{file.file.name}</Typography>
+interface State {
+  myChassis: string;
+  myActivity: string;
+  myLocation: string;
+}
 
-          <FormControl required style={{ minWidth: 90 }}>
-            <InputLabel>Chassis</InputLabel>
-            <Select
-              autoWidth
-              value={file.metadata.chassis}
-              onChange={(e) =>
-                file.setMetadata("chassis", e.target.value as string)
-              }
+class UploadListItem extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      myChassis: DEFAULT_CHASSIS,
+      myActivity: DEFAULT_ACTIVITY,
+      myLocation: DEFAULT_LOCATION,
+    };
+  }
+  render() {
+    return (
+      <>
+        <ListItem style={{ fontSize: "1vh", margin: "0", padding: "0" }}>
+          <Card variant="outlined">
+            <CardContent
+              style={{ fontSize: "1vh", margin: "0", padding: "0.3vh" }}
             >
-              <MenuItem value="" disabled>
-                Chassis
-              </MenuItem>
-              {CHASSIS_OPTIONS.map((chassis) => (
-                <MenuItem value={chassis}>{chassis}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Required</FormHelperText>
-          </FormControl>
+              <Typography>{this.props.file.file.name}</Typography>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  paddingTop: "5%",
+                }}
+              >
+                <div>
+                  <InputLabel style={{ fontSize: "1.2vh" }}>Chassis</InputLabel>
+                  <FeederChassis masterChassis={this.props.masterChassis} />
+                </div>
+                <div>
+                  <InputLabel style={{ fontSize: "1.2vh" }}>
+                    Activity
+                  </InputLabel>
+                  <FeederActivity masterActivity={this.props.masterActivity} />
+                </div>
+                <div>
+                  <InputLabel style={{ fontSize: "1.2vh" }}>
+                    Location
+                  </InputLabel>
+                  <FeederLocation masterLocation={this.props.masterLocation} />
+                </div>
+              </div>
+              <TextField
+                label="Test Number"
+                value={this.props.file.metadata.testNum}
+                onChange={(e) =>
+                  this.props.file.setMetadata(
+                    "testNum",
+                    e.target.value as string
+                  )
+                }
+              />
+              <TextField
+                label="Notes"
+                value={this.props.file.metadata.notes}
+                onChange={(e) =>
+                  this.props.file.setMetadata("notes", e.target.value as string)
+                }
+              />
 
-          <FormControl required style={{ minWidth: 115 }}>
-            <InputLabel>Location</InputLabel>
-            <Select
-              autoWidth
-              value={file.metadata.location}
-              onChange={(e) =>
-                file.setMetadata("location", e.target.value as string)
-              }
-            >
-              <MenuItem value="" disabled>
-                Location
-              </MenuItem>
-              {LOCATION_OPTIONS.map((location) => (
-                <MenuItem value={location}>{location}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Required</FormHelperText>
-          </FormControl>
-          <FormControl required style={{ minWidth: 150 }}>
-            <InputLabel>Activity</InputLabel>
-            <Select
-              autoWidth
-              value={file.metadata.activity}
-              onChange={(e) =>
-                file.setMetadata("activity", e.target.value as string)
-              }
-            >
-              <MenuItem value="" disabled>
-                Activity
-              </MenuItem>
-              {CAR_ACTIVITIES_OPTIONS.map((activity) => (
-                <MenuItem value={activity}>{activity}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Required</FormHelperText>
-          </FormControl>
-          <TextField
-            label="Test Number"
-            value={file.metadata.testNum}
-            onChange={(e) =>
-              file.setMetadata("testNum", e.target.value as string)
-            }
-          />
-          <br />
-          <TextField
-            label="Notes"
-            value={file.metadata.notes}
-            multiline
-            fullWidth={true}
-            rows={3}
-            onChange={(e) =>
-              file.setMetadata("notes", e.target.value as string)
-            }
-          />
-
-          {file.uploadInfo !== null && (
-            <Box width="100%" m={1}>
-              <StorageProgressBar uploadInfo={file.uploadInfo} />
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    </ListItem>
-  );
-};
+              {this.props.file.uploadInfo !== null && (
+                <Box width="100%" m={1}>
+                  <StorageProgressBar uploadInfo={this.props.file.uploadInfo} />
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </ListItem>
+      </>
+    );
+  }
+}
 
 export default UploadListItem;

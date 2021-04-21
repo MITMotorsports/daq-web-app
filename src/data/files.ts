@@ -3,6 +3,14 @@ import "firebase/firestore";
 import L from "leaflet";
 import axios from "axios";
 
+export const MetadataFields: string[] = [
+  "chassis",
+  "location",
+  "activity",
+  "testNum",
+  "notes",
+];
+
 const dataTypes: {
   [key: string]: {
     message: string;
@@ -39,13 +47,6 @@ export type MetadataField =
   | "testNum"
   | "notes";
 
-export const MetadataFields: string[] = [
-  "chassis",
-  "location",
-  "activity",
-  "testNum",
-  "notes",
-];
 export interface FileMetadata {
   chassis?: string;
   location?: string;
