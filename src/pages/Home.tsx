@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
 import fullWhite from "../images/fullWhite.png";
@@ -36,7 +36,16 @@ import FileModal from "./FileModal";
 import UploadModal from "./UploadModal";
 import FileListItem from "../components/FileListItem";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
+import firebase from "firebase";
+import { useHistory } from "react-router";
 
+import { MetadataFields } from "../data/files";
+
+import {
+  CHASSIS_OPTIONS,
+  LOCATION_OPTIONS,
+  CAR_ACTIVITIES_OPTIONS,
+} from "../components/UploadListItem";
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
   const [logFiles, setLogFiles] = useState<LogFile[]>([]);
@@ -49,12 +58,19 @@ const Home: React.FC = () => {
 
   const [dateOpened, setDateOpened] = useState<boolean>(false);
   const [dateRange, setDateRange] = React.useState<DateRange>({});
-  const myYearOptions = ["MY18", "MY19", "MY20", "MY21"];
-  const [myYears, setmyYears] = useState<string[]>(myYearOptions);
+
+  const [myYears, setmyYears] = useState<string[]>(CHASSIS_OPTIONS);
+  const [locations, setLocations] = useState<string[]>(LOCATION_OPTIONS);
+  const [activities, setActivities] = useState<string[]>(
+    CAR_ACTIVITIES_OPTIONS
+  );
+
   const [searchText, setSearchText] = useState<string>();
 
+  const history = useHistory();
+
   const searchOptions = {
-    keys: ["name"],
+    keys: ["name"].concat(MetadataFields.map((f) => "metadata." + f)),
   };
 
   const fuse = new Fuse(logFiles, searchOptions);
@@ -67,21 +83,29 @@ const Home: React.FC = () => {
     reloadFiles();
   };
 
-  const reloadFiles = async () => {
-    const fls = await getFiles();
-    setLogFiles(fls);
-
-    const newOpenedState = new Array(fls.length).fill(false);
+  useEffect(() => {
+    const newOpenedState = new Array(logFiles.length).fill(false);
     // Preserve state of previous groups
-    if (opened) {
-      for (let i = 0; i < Math.min(opened.length, newOpenedState.length); i++) {
-        newOpenedState[i] = opened[i];
+    const prevOpened = opened;
+    if (prevOpened) {
+      for (
+        let i = 0;
+        i < Math.min(prevOpened.length, newOpenedState.length);
+        i++
+      ) {
+        newOpenedState[i] = prevOpened[i];
       }
     }
     setOpened(newOpenedState);
+  }, [logFiles]); // eslint-disable-line
+  const reloadFiles = async () => {
+    getFiles(setLogFiles);
   };
 
-  window.addEventListener("load", reloadFiles);
+  // TODO @rhuffy fix this!
+  useEffect(() => {
+    reloadFiles();
+  }, []); // eslint-disable-line
 
   makeStyles((theme) => ({
     root: {
@@ -115,14 +139,30 @@ const Home: React.FC = () => {
                 style={{ height: "4.7vh" }}
               />
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={() => setShowUploadModal(true)}
-              >
-                Upload
-              </Button>
-            </Grid>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Grid item>
+                <Button
+                  style={{ marginRight: "0.5vh" }}
+                  variant="contained"
+                  onClick={() => {
+                    firebase
+                      .auth()
+                      .signOut()
+                      .then(() => history.push("/"));
+                  }}
+                >
+                  Log Out
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={() => setShowUploadModal(true)}
+                >
+                  Upload
+                </Button>
+              </Grid>
+            </div>
           </Grid>
         </Toolbar>
       </AppBar>
@@ -139,7 +179,6 @@ const Home: React.FC = () => {
             value={fileTypeSelection}
           >
             <Tab label="Logs" value="logs" tabIndex={0}></Tab>
-            <Tab label="CAN Specs" value="specs" tabIndex={1}></Tab>
           </Tabs>
           <a
             href="https://github.com/MITMotorsports/daq-web-app/issues/new"
@@ -197,12 +236,71 @@ const Home: React.FC = () => {
               <Select
                 multiple
                 value={myYears}
-                onChange={(e) => setmyYears(e.target.value as string[])}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setmyYears(e.target.value as string[]);
+                  setFilters(
+                    "myyears",
+                    (l: LogFile) =>
+                      !!l?.metadata?.chassis &&
+                      (e.target.value as string[]).includes(l.metadata.chassis)
+                  );
+                }}
                 renderValue={(selected) => (selected as string[]).join(", ")}
               >
-                {myYearOptions.map((x, i) => (
+                {CHASSIS_OPTIONS.map((x, i) => (
                   <MenuItem key={x} value={x}>
                     <Checkbox checked={myYears.indexOf(x) > -1} />
+                    <ListItemText primary={x}></ListItemText>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel>Location</InputLabel>
+              <Select
+                multiple
+                value={locations}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setLocations(e.target.value as string[]);
+                  setFilters(
+                    "locations",
+                    (l: LogFile) =>
+                      !!l?.metadata?.location &&
+                      (e.target.value as string[]).includes(l.metadata.location)
+                  );
+                }}
+                renderValue={(selected) => (selected as string[]).join(", ")}
+              >
+                {LOCATION_OPTIONS.map((x, i) => (
+                  <MenuItem key={x} value={x}>
+                    <Checkbox checked={locations.indexOf(x) > -1} />
+                    <ListItemText primary={x}></ListItemText>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel>Activity</InputLabel>
+              <Select
+                multiple
+                value={activities}
+                style={{ minWidth: 100 }}
+                onChange={(e) => {
+                  setActivities(e.target.value as string[]);
+                  setFilters(
+                    "activities",
+                    (l: LogFile) =>
+                      !!l?.metadata?.activity &&
+                      (e.target.value as string[]).includes(l.metadata.activity)
+                  );
+                }}
+                renderValue={(selected) => (selected as string[]).join(", ")}
+              >
+                {CAR_ACTIVITIES_OPTIONS.map((x, i) => (
+                  <MenuItem key={x} value={x}>
+                    <Checkbox checked={activities.indexOf(x) > -1} />
                     <ListItemText primary={x}></ListItemText>
                   </MenuItem>
                 ))}
