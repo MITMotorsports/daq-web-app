@@ -139,7 +139,7 @@ const UploadModal: React.FC = () => {
         ))}
       </List>
       <Box style={{ justifyContent: "center" }}>
-        {fileLoaded ? <Button onClick={handleUpload}>Upload</Button> : null}
+        {fileLoaded && <Button onClick={handleUpload}>Upload</Button>}
       </Box>
     </div>
   );
