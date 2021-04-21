@@ -39,6 +39,14 @@ export type MetadataField =
   | "testNum"
   | "notes"
   | "hyperlink";
+
+export const MetadataFields: string[] = [
+  "chassis",
+  "location",
+  "activity",
+  "testNum",
+  "notes",
+];
 export interface FileMetadata {
   chassis?: string;
   location?: string;
