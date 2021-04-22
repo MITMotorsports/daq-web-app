@@ -26,7 +26,9 @@ export interface FileUploadWatcher {
 const UploadModal: React.FC = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [filenames, setFilenames] = useState([] as FileUploadWatcher[]);
+  const [fileLoaded, setFileLoaded] = useState(false);
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFileLoaded(true);
     setFilenames((filenames) => [
       ...filenames,
       ...acceptedFiles.map((file) => {
@@ -141,7 +143,7 @@ const UploadModal: React.FC = () => {
         ))}
       </List>
       <Box style={{ justifyContent: "center" }}>
-        <Button onClick={handleUpload}>Upload</Button>
+        {fileLoaded && <Button onClick={handleUpload}>Upload</Button>}
       </Box>
     </div>
   );
