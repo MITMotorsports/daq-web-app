@@ -25,11 +25,15 @@ interface Props {
 const FilePreview: React.FC<Props> = ({ file }) => {
   const [data, setData] = useState<FilePreviewData | null>(null);
   const [fieldChecked, setFieldChecked] = useState<string[]>([]);
+  const [loadyCircle, setLoadyCircle] = useState(true);
   useEffect(() => {
     if (!data && file)
       getPreviewData(file)
         .then((obj) => setData(obj))
-        .catch((e) => console.warn(e));
+        .catch((e) => {
+          console.warn(e);
+          setLoadyCircle(false);
+        });
   });
 
   if (data)
@@ -105,7 +109,9 @@ const FilePreview: React.FC<Props> = ({ file }) => {
   return (
     <>
       <br></br>
-      <CircularProgress style={{ margin: "5vh", marginLeft: "35vw" }} />
+      {loadyCircle ? (
+        <CircularProgress style={{ margin: "5vh", marginLeft: "35vw" }} />
+      ) : null}
     </>
   );
 };
