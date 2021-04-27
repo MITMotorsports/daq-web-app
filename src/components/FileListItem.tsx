@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { LogFile, deleteFile } from "../data/files";
+import { setFavorite } from "../data/user";
 import {
   Box,
   Button,
@@ -14,12 +15,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 import { Done, Error, HourglassEmpty } from "@material-ui/icons";
 
 interface FileListItemProps {
   file: LogFile;
   onClick: () => void;
   reloadFiles: () => void;
+  isFavorite: boolean;
+  reloadUser: () => void;
 }
 
 function CircularProgressWithLabel(
@@ -52,6 +56,8 @@ const FileListItem: React.FC<FileListItemProps> = ({
   file,
   onClick,
   reloadFiles,
+  isFavorite,
+  reloadUser,
 }) => {
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const downloadUrl = file.npzURL;
@@ -107,6 +113,14 @@ const FileListItem: React.FC<FileListItemProps> = ({
             </Button>
           </DialogActions>
         </Dialog>
+        <Button
+          onClick={async () => {
+            await setFavorite(file.id, !isFavorite);
+            reloadUser();
+          }}
+        >
+          {isFavorite ? <Favorite /> : <FavoriteBorder />}
+        </Button>
 
         <ButtonGroup>
           <Button onClick={() => onClick()} variant="contained">

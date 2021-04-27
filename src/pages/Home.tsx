@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { LogFile, getFiles } from "../data/files";
+import { getFavorites } from "../data/user";
 import fullWhite from "../images/fullWhite.png";
 import bugIssues from "../images/bugIssues.svg";
 import "../utilities.css";
@@ -49,6 +50,7 @@ import {
 type FileFilter = (l: LogFile) => boolean;
 const Home: React.FC = () => {
   const [logFiles, setLogFiles] = useState<LogFile[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<LogFile | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [fileTypeSelection, setFileTypeSelection] = useState<"logs" | "specs">(
@@ -106,9 +108,13 @@ const Home: React.FC = () => {
     getFiles(setLogFiles);
   };
 
+  const reloadUser = async () => {
+    setFavorites(await getFavorites());
+  };
+
   // TODO @rhuffy fix this!
   useEffect(() => {
-    reloadFiles();
+    reloadFiles().then(reloadUser);
   }, []); // eslint-disable-line
 
   makeStyles((theme) => ({
@@ -354,6 +360,8 @@ const Home: React.FC = () => {
                       file={f}
                       onClick={() => setSelectedFile(f)}
                       reloadFiles={reloadFiles}
+                      isFavorite={favorites.includes(f.id)}
+                      reloadUser={reloadUser}
                     />
                   ) : null
                 )
@@ -361,7 +369,21 @@ const Home: React.FC = () => {
             ])
               .sort((a, b) => (a[0] > b[0] ? -1 : 1))
               .map(([k, v]) => [new Date(k).toDateString(), v]);
-
+            groupItems.unshift([
+              "Favorites",
+              logFiles
+                .filter((log) => favorites.includes(log.id))
+                .map((f) => (
+                  <FileListItem
+                    key={f.id}
+                    file={f}
+                    onClick={() => setSelectedFile(f)}
+                    reloadFiles={reloadFiles}
+                    isFavorite={favorites.includes(f.id)}
+                    reloadUser={reloadUser}
+                  />
+                )),
+            ]);
             return groupItems.map(
               (item, i) =>
                 item[1].length > 0 &&
