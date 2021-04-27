@@ -114,8 +114,7 @@ const Home: React.FC = () => {
 
   // TODO @rhuffy fix this!
   useEffect(() => {
-    await reloadFiles();
-    reloadUser();
+    reloadFiles().then(reloadUser);
   }, []); // eslint-disable-line
 
   makeStyles((theme) => ({
